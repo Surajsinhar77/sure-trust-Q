@@ -2,9 +2,10 @@ import { Link } from "react-router-dom";
 import { useState, useEffect } from "react";
 import { Input, Button, Typography, Avatar } from "@mui/material";
 import { register } from '../common/api/ApiHandler';
-import { useAuth } from "../common/AuthContext";
+
+import { useAuth } from "../common/AuthProvider";
 import { useNavigate } from "react-router-dom";
-import ProfilePicUploader from '../components/ProfilePicUploader';
+import ProfilePicUploader from '../UI/FileUploaderHandle';
 import { toast } from "react-toastify";
 
 export default function RegisterPage() {
@@ -53,7 +54,7 @@ export default function RegisterPage() {
             }
             setLoading(false);
             return;
-        }catch (error) {
+        } catch (error) {
             toast.error(error.message);
         }
         setLoading(false);
@@ -83,41 +84,50 @@ export default function RegisterPage() {
                 </div>
                 <div >
 
-                    <Input
-                        className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                        id="name"
-                        label="Name"
-                        name="name"
-                        onChange={(e) => onInputChange(e)}
-                    />
+                    <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="Name">
+                        Email
+                        <Input
+                            className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                            id="email"
+                            type="text"
+                            label="Name"
+                            name="Name"
+                            onChange={(e) => onInputChange(e)}
+                        />
+                    </label>
 
                 </div>
                 <div>
-
-                    <Input
-                        className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                        id="email"
-                        type="email"
-                        label="Email"
-                        name="email"
-                        onChange={(e) => onInputChange(e)}
-                    />
+                    <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="email">
+                        Email
+                        <Input
+                            className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                            id="email"
+                            type="email"
+                            label="Email"
+                            name="email"
+                            onChange={(e) => onInputChange(e)}
+                        />
+                    </label>
                 </div>
                 <div className="mb-6">
-
-                    <Input
-                        className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 mb-3 leading-tight focus:outline-none focus:shadow-outline"
-                        id="password"
-                        type="password"
-                        label="Password"
-                        name="password"
-                        onChange={(e) => onInputChange(e)}
-                    />
+                    <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="password">
+                        Password
+                        <Input
+                            className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 mb-3 leading-tight focus:outline-none focus:shadow-outline"
+                            id="password"
+                            type="password"
+                            label="Password"
+                            name="password"
+                            onChange={(e) => onInputChange(e)}
+                        />
+                    </label>
                 </div>
                 <div className="flex flex-col gap-2 items-center justify-between">
                     <Button
                         className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
                         type="button"
+                        variant="contained"
                         onClick={handleRegister}
                         loading={loading}
                     >
