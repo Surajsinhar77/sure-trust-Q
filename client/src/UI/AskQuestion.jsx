@@ -9,7 +9,11 @@ const uploadImages = async (files, projectName) => {
 export default function Example(){
   const [spaceRef, setSpaceRef] = useState("");
   const [files, setFile] = useState([]);
-
+  let nOffFeacture = [1];
+  let nOffTechStack = [1];
+  let AddMoreTechStack = () => {
+    
+  }
   const [formData, setFormData] = useState({
     projectName: "",
     dateStart: "",
@@ -288,7 +292,7 @@ export default function Example(){
                 </div>
 
                 
-                  {nOffFeacture.map((item, index) => 
+                  {nOffFeacture?.map((item, index) => 
                     <div className="sm:col-span-3" key={index}>
                       <label htmlFor="first-name" className="block text-sm font-medium leading-6 text-gray-900">
                         Feature {index + 1}
@@ -312,7 +316,7 @@ export default function Example(){
                   </label>
                   <div className="mt-2 bg-black  rounded-lg">
                     <button  
-                      onClick={AddMoreFeature}
+                      // onClick={AddMoreFeature}
                       className="block w-full rounded-md border-0 py-1.5 text-white shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"> Add more Feature</button>
                   </div>
                 </div>
