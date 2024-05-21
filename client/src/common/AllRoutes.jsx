@@ -5,6 +5,7 @@ import Home from "../pages/Home";
 import AskQuestion from "../pages/Aquestion";
 import AboutUs from "../pages/AboutUs";
 import MyQuestion from "../pages/MyQuestion";
+import Allanswer from "../pages/Allanswer";
 
 export default function AllRoutes() {
   return (
@@ -15,6 +16,7 @@ export default function AllRoutes() {
       <Route path="/login" element={<Login />} />
       <Route path="/register" element={<Register />} />
       <Route path="/my-questions" element={<MyQuestion />} />
+      <Route path="/all-answer" element={<Allanswer />} />
     </Routes>
   );
 }

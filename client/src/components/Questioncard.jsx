@@ -18,6 +18,8 @@ import ImgPostSection from './ImgPostSection';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import CodeUI from './CodeUI';
+import Model from './Model';
+import { Link } from 'react-router-dom';
 
 
 const value = `void main() {
@@ -64,11 +66,11 @@ export default function Questioncard() {
       />
       <ImgPostSection/>
       <CardContent>
-        <p className='text-xl font-bold'>
+        <Link to='/all-answer' className='text-xl font-bold hover:text-slate-500'>
           This impressive paella is a perfect party dish and a fun meal to cook
           together with your guests. Add 1 cup of frozen peas along with the mussels,
           if you like.
-        </p>
+        </Link>
       </CardContent>
       <CardActions disableSpacing className='gap-2'>
         <IconButton aria-label="add to favorites">
@@ -78,7 +80,7 @@ export default function Questioncard() {
           <ShareIcon />
         </IconButton>
         <Box>
-          <Button variant='outlined' color="success"> Answer </Button>
+          <Model/>
         </Box>
         <Box>
           <Button variant='outlined' color="success"> AI Solution </Button>

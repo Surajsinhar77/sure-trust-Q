@@ -13,11 +13,11 @@ function AskQuestion() {
     }
 
     return (
-        <Box className="ask-question  border" varient='outlined'>
+        <Box className="ask-question text-slate-700" varient='outlined'>
             <Box className="ask-ques-container">
                 <h1 className='text-2xl'>Ask a public Question</h1>
                 <form className='flex flex-col gap-7'>
-                    <Box className="ask-form-container flex flex-col gap-5">
+                    <Box className="ask-form-container flex flex-col gap-5 rounded">
                         <label htmlFor="ask-ques-title">
                             <h4>Title</h4>
                             <p>Be specific and imagine you're asking a question</p>

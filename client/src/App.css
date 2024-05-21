@@ -3,3 +3,7 @@
   margin: 0;
   box-sizing: border-box;
 }
+body{
+  background-color: #f1f2f3;
+  color: rgb(51 65 85 / var(--tw-text-opacity));
+}
