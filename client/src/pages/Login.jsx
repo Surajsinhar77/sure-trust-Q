@@ -67,7 +67,7 @@ export default function LoginPage() {
 
   return (
     <div className="flex flex-col items-center justify-center h-screen gap-3">
-      <h3 className="text-3xl font-normal uppercase">Login</h3>
+      <h1 className="text-3xl font-bold ">Login</h1>
       <div className="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4 w-80 border flex flex-col items-center gap-5">
         <div className="avaterDiv border-2 rounded-full border-blue-500 p-1">
           <Avatar src="https://docs.material-tailwind.com/img/face-2.jpg" alt="avatar" />
