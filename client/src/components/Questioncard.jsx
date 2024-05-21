@@ -17,6 +17,16 @@ import MoreVertIcon from '@mui/icons-material/MoreVert';
 import ImgPostSection from './ImgPostSection';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
+import CodeUI from './CodeUI';
+
+
+const value = `void main() {
+}
+  int a = 1;
+  int b = 2;
+  int c = a + b;
+  cout<<c<<endl;
+}` ;
 
 const ExpandMore = styled((props) => {
   const { expand, ...other } = props;
@@ -109,6 +119,10 @@ export default function Questioncard() {
           <Typography>
             Set aside off of the heat to let rest for 10 minutes, and then serve.
           </Typography>
+        </CardContent>
+
+        <CardContent>
+          <CodeUI value={value}/>
         </CardContent>
       </Collapse>
     </Card>

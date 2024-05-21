@@ -2,9 +2,15 @@ import React from 'react';
 import './AskQuestion.css';
 // import {useNavigate} from 'react-router-dom'
 import { Box, Button, TextField, Paper } from '@mui/material';
-import { TextareaAutosize } from '@mui/base/TextareaAutosize'
+// import { TextareaAutosize } from '@mui/base/TextareaAutosize'
+import CodeUI from '../components/CodeUI';
+import FileUploaderCard from '../components/FileUploaderCard';
 
 function AskQuestion() {
+    const [code , setCode] = React.useState('');
+    function pleaseWrite(){
+        console.log('Please write the code')
+    }
 
     return (
         <Box className="ask-question  border" varient='outlined'>
@@ -22,8 +28,8 @@ function AskQuestion() {
                                 className='w-full'
                             />
                         </label>
-                        <label htmlFor="ask-ques-body"><
-                            h4>Body</h4>
+                        <label htmlFor="ask-ques-body">
+                            <h4>Body</h4>
                             <p>Include all the information someone would need to answer your question</p>
                             <textarea
                                 name=""
@@ -34,6 +40,12 @@ function AskQuestion() {
                             >
                             </textarea>
                         </label>
+
+                        <label htmlFor="ask-ques-body">
+                            <h4>Uplode Images</h4>
+                            <p>Include all the Images</p>
+                            <FileUploaderCard/>
+                        </label>
                         <label htmlFor="ask-tags"><
                             h4>Tags</h4>
                             <p>Add up to 5 tags to describe what your question is about</p>
@@ -43,6 +55,12 @@ function AskQuestion() {
                                 placeholder='e.g. (postgresql sql c++)'
                                 className='w-full'
                             />
+                        </label>
+
+                        <label htmlFor="ask-tags"><
+                            h4>Tags</h4>
+                            <p>Add up to 5 tags to describe what your question is about</p>
+                            <CodeUI value={code} onChange={setCode} />
                         </label>
                     </Box>
                     <Button

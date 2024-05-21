@@ -1,12 +1,18 @@
 import React from 'react';
-import ResponsiveAppbar from '../components/ResponsiveAppBar';
+// import ResponsiveAppbar from '../components/ResponsiveAppBar';
 import { Outlet, Route, Routes } from 'react-router-dom'; 
+import Questioncard from "../components/Questioncard";
+import { Box } from '@mui/material';
+
 
 export default function Home() {
   return (
-    <div>
-      <h1>HOme</h1>
+    <Box gap={3}>
+      <div  className=" flex flex-col gap-6">
+        <Questioncard/>
+        <Questioncard/>
+      </div>
       <Outlet/>
-    </div>
+    </Box>
   );
 }

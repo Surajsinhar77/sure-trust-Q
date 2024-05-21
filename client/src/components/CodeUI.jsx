@@ -8,7 +8,7 @@ import 'codemirror/mode/javascript/javascript'; // Import the language mode you 
 const CodeUI = ({ value, onChange }) => {
   return (
     <Box sx={{ width: '100%', mt: 2 }}>
-      <Typography variant="h6" component="div" gutterBottom>
+      <Typography variant="p" component="div" gutterBottom>
         Code Snippet
       </Typography>
       <CodeMirror
@@ -21,14 +21,6 @@ const CodeUI = ({ value, onChange }) => {
         onBeforeChange={(editor, data, value) => {
           onChange(value);
         }}
-      />
-      <TextField
-        label="Code Description"
-        multiline
-        rows={4}
-        variant="outlined"
-        fullWidth
-        sx={{ mt: 2 }}
       />
     </Box>
   );
