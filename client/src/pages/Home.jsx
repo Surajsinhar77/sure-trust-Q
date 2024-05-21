@@ -5,7 +5,6 @@ import { Outlet, Route, Routes } from 'react-router-dom';
 export default function Home() {
   return (
     <div>
-      <ResponsiveAppbar/>
       <h1>HOme</h1>
       <Outlet/>
     </div>

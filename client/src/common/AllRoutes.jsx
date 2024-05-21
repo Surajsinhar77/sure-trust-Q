@@ -1,6 +1,4 @@
 import { Route, Routes, Outlet } from "react-router-dom";
-import UserRoutes from '../Routes/UserRoutes';
-import CommonRoutes from "../Routes/CommonRoutes";
 import Login from "../pages/Login";
 import Register from "../pages/Registerpage";
 import Home from "../pages/Home";
