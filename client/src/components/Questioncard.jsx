@@ -56,17 +56,23 @@ export default function Questioncard() {
             R
           </Avatar>
         }
-        action={
-          <IconButton aria-label="settings">
-            <MoreVertIcon />
-          </IconButton>
-        }
+        // action={
+        //   <IconButton aria-label="settings">
+        //     {/* <MoreVertIcon /> */}
+        //   </IconButton>
+        // }
         title="Shrimp and Chorizo Paella"
         subheader="September 14, 2016"
       />
-      <ImgPostSection/>
+      {/* <ImgPostSection/> */}
+      <CardMedia
+        component="img"
+        className='h-96'
+        image="https://images.unsplash.com/photo-1551963831-b3b1ca40c98e"
+        alt="Paella dish"
+      />
       <CardContent>
-        <Link to='/all-answer' className='text-xl font-bold hover:text-slate-500'>
+        <Link to='/all-answer' className='text-lg text-slate-700 hover:text-blue-300'>
           This impressive paella is a perfect party dish and a fun meal to cook
           together with your guests. Add 1 cup of frozen peas along with the mussels,
           if you like.

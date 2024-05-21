@@ -11,7 +11,6 @@ const style = {
   transform: 'translate(-50%, -50%)',
   width: 400,
   bgcolor: 'background.paper',
-  border: '2px solid #000',
   boxShadow: 24,
   p: 4,
 };
@@ -27,6 +26,7 @@ export default function BasicModal() {
       <Modal
         open={open}
         onClose={handleClose}
+        className='border-0 rounded-lg'
         aria-labelledby="modal-modal-title"
         aria-describedby="modal-modal-description"
       >
