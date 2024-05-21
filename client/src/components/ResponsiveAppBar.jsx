@@ -63,7 +63,7 @@ function ResponsiveAppBar() {
                 textDecoration: 'none',
               }}
             >
-              LOGO
+              ST/Q&A
             </Typography>
           </Link>
 
