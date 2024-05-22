@@ -1,12 +1,9 @@
 import { Link } from "react-router-dom";
 import { useState, useEffect } from "react";
 import { Input, Button, Typography, Avatar } from "@mui/material";
-import { register } from '../common/api/ApiHandler';
-
 import { useAuth } from "../common/AuthProvider";
 import { useNavigate } from "react-router-dom";
-import ProfilePicUploader from '../UI/FileUploaderHandle';
-import { toast } from "react-toastify";
+import ProfilePicUploader from "../components/FileUploaderHandle";
 
 export default function RegisterPage() {
     const [selectedFile, setSelectedFile] = useState(null);
@@ -23,41 +20,7 @@ export default function RegisterPage() {
 
     const handleRegister = async () => {
         // Handle registration logic here
-        setLoading(true);
-        try {
-            if (!userDetail.name || !userDetail.email || !userDetail.password || !selectedFile) {
-                if (!userDetail.name) {
-                    toast.error("Please enter the name");
-                } else if (!userDetail.email) {
-                    toast.error("Please enter the email");
-                } else if (!userDetail.password) {
-                    toast.error("Please enter the password");
-                } else if (!selectedFile) {
-                    toast.error("Please select the profile picture");
-                } else {
-                    toast.error("Please fill all the fields");
-                }
-                setLoading(false);
-                return;
-            }
-
-            const newform = new FormData();
-            newform.append('name', userDetail.name);
-            newform.append('email', userDetail.email);
-            newform.append('password', userDetail.password);
-            newform.append('file', selectedFile);
-
-            const response = await register(newform)
-            if (response) {
-                login(response);
-                navigate('/');
-            }
-            setLoading(false);
-            return;
-        } catch (error) {
-            toast.error(error.message);
-        }
-        setLoading(false);
+       
     };
 
     function OnClose() {

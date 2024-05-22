@@ -1,68 +1,22 @@
-import { Link, Navigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { useState } from "react";
 import { Avatar, Button, Input, Typography } from "@mui/material";
-import { toast } from 'react-toastify';
 // import { useAuth } from "../common/AuthContext";
-// import params from "../common/params";
+import { LoginUser } from "../common/AuthHandler/apiHandler";
 
 export default function LoginPage() {
-  // const navigate = useNavigate();
+  const navigate = useNavigate();
   const [userDeatil, setUserDetail] = useState('');
   // const { login } = useAuth();
   const [loading, setLoading] = useState(false);
 
-  // const onInputChange = (e) => {
-  //   const { name, value } = e.target;
-  //   setUserDetail({ ...userDeatil, [name]: value });
-  // }
-
-  // const notify = (message, { type }) => {
-  //   if (type) {
-  //     toast.success(message);
-  //     return;
-  //   }
-  //   toast.error(message);
-  // }
+  const onInputChange = (e) => {
+    const { name, value } = e.target;
+    setUserDetail({ ...userDeatil, [name]: value });
+  }
 
   const handleLogin = async () => {
-    //   try {
-    //     setLoading(true);
-    //     if (!userDeatil.email || !userDeatil.password) {
-    //       if (!userDeatil.email) {
-    //         notify("Please enter the email", false);
-    //       } else if (!userDeatil.password) {
-    //         notify("Please enter the password", false);
-    //       } else {
-    //         notify("Please fill all the fields", false);
-    //       }
-    //       setLoading(false);
-    //       return;
-    //     }
-    //     const response = await axios.post(`${params?.baseURL}/auth/login`, { email: userDeatil.email, password: userDeatil.password }, {
-    //       withCredentials: true,
-    //       headers: {
-    //         'Content-Type': 'application/json',
-    //         'Authorization': 'Bearer ' + JSON.parse(localStorage.getItem('user'))?.token,
-    //       }
-    //     });
-    //     if (response.status === 200) {
-    //       if(response?.data?.result){
-    //         login(response.data.result);
-    //         notify(response.data.message, { type: true });
-    //         setLoading(false);
-    //         navigate('/');
-    //         return;
-    //       }
-    //       throw new Error(response.data.message);
-    //     }
-    //     navigate('/login');
-    //     setLoading(false);
-    //   } catch (err) {
-    //     console.log("This is the main Error Here ", err);
-    //     notify(err.message, { type: false });
-    //     navigate('/login');
-    //     setLoading(false);
-    //   }
+    // const result = LoginUser(userDeatil, setLoading, navigate);
   };
 
   return (
