@@ -3,7 +3,7 @@ import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import Typography from '@mui/material/Typography';
 import Modal from '@mui/material/Modal';
-import AnswerForm from './AnswerForm';
+// import AnswerForm from './AnswerForm';
 import { Height } from '@mui/icons-material';
 
 const style = {
@@ -19,7 +19,9 @@ const style = {
   p: 4,
 };
 
-export default function BasicModal() {
+export default function Model(props) {
+  
+  console.log("This is from basic Model function ");
   const [open, setOpen] = React.useState(false);
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
@@ -35,7 +37,8 @@ export default function BasicModal() {
         aria-describedby="modal-modal-description"
       >
         <Box sx={style}>
-          <AnswerForm onClose={handleClose}/>
+          {/* <Fun onClose={handleClose}/> */}
+          {/* {fun} */}
         </Box>
       </Modal>
     </div>

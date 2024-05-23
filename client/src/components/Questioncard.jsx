@@ -20,6 +20,7 @@ import Button from '@mui/material/Button';
 import CodeUI from './CodeUI';
 import Model from './Model';
 import { Link } from 'react-router-dom';
+import AnswerForm from './AnswerForm';
 
 
 const value = `void main() {
@@ -86,7 +87,10 @@ export default function Questioncard() {
           <ShareIcon />
         </IconButton>
         <Box>
-          <Model/>
+          <Model fun={AnswerForm}/> 
+            {/* <AnswerForm/>  */}
+            {/* <Button variant='outlined' color="success"> Answer </Button> */}
+          {/* </Model> */}
         </Box>
         <Box>
           <Button variant='outlined' color="success"> AI Solution </Button>

@@ -3,12 +3,12 @@ import { useState, useEffect } from "react";
 import { Input, Button, Typography, Avatar } from "@mui/material";
 import { useAuth } from "../common/AuthProvider";
 import { useNavigate } from "react-router-dom";
-import ProfilePicUploader from "../components/FileUploaderHandle";
+import ProfilePicUploader from "../components/ProfilePicUploader";
 
 export default function RegisterPage() {
     const [selectedFile, setSelectedFile] = useState(null);
     const [userDetail, SetUserDetail] = useState('');
-    const { login } = useAuth();
+    // const { login } = useAuth();
     const [open, setOpen] = useState(false);
     const [loading, setLoading] = useState(false);
     const navigate = useNavigate();
@@ -20,7 +20,7 @@ export default function RegisterPage() {
 
     const handleRegister = async () => {
         // Handle registration logic here
-       
+        console.log("handleRegister");
     };
 
     function OnClose() {
@@ -92,7 +92,7 @@ export default function RegisterPage() {
                         type="button"
                         variant="contained"
                         onClick={handleRegister}
-                        loading={loading}
+                        // loading={loading}
                     >
                         Register
                     </Button>

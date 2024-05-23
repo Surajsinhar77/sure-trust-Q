@@ -71,7 +71,7 @@ export default function Allanswer() {
                 </Box>
 
                 <Box>
-                    <Model />
+                    {/* <Model /> */}
                 </Box>
             </Box>
         </div>

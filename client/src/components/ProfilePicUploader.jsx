@@ -6,6 +6,7 @@ import { Avatar, Tooltip } from '@mui/material';
 
 function ProfilePicUploader({ isOpen, onClose , onOpen, selectedFile, setSelectedFile}) {
   
+  console.log(" \n onClose", onClose, "     \n isOpen" , isOpen , " \n selectedFile", selectedFile)
 
   const handleFileChange = (e) => {
     setSelectedFile(e.target.files[0]);
