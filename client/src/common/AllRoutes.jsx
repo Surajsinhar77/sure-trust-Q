@@ -6,6 +6,7 @@ import AskQuestion from "../pages/Aquestion";
 import AboutUs from "../pages/AboutUs";
 import MyQuestion from "../pages/MyQuestion";
 import Allanswer from "../pages/Allanswer";
+import Test from "../pages/Test";
 
 export default function AllRoutes() {
   return (
@@ -17,6 +18,7 @@ export default function AllRoutes() {
       <Route path="/register" element={<Register />} />
       <Route path="/my-questions" element={<MyQuestion />} />
       <Route path="/all-answer" element={<Allanswer />} />
+      <Route path='/test' element={<Test/>} />
     </Routes>
   );
 }

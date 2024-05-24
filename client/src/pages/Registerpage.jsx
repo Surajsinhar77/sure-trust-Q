@@ -3,7 +3,8 @@ import { useState, useEffect } from "react";
 import { Input, Button, Typography, Avatar } from "@mui/material";
 import { useAuth } from "../common/AuthProvider";
 import { useNavigate } from "react-router-dom";
-import ProfilePicUploader from "../components/ProfilePicUploader";
+import FileUploaderCard from "../components/FileUploaderCard";
+import Model from "../components/Model";
 
 export default function RegisterPage() {
     const [selectedFile, setSelectedFile] = useState(null);
@@ -35,16 +36,25 @@ export default function RegisterPage() {
         <div className=" flex flex-col items-center justify-center h-screen gap-3">
             <h1 className="text-3xl font-bold ">SignUp</h1>
             <div className="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4 w-80 border flex flex-col items-center gap-5">
-                <div className="avaterDiv border-2 rounded-full border-blue-500 p-1">
-                    {/* <Avatar src="https://docs.material-tailwind.com/img/face-2.jpg" alt="avatar" /> */}
-                    <ProfilePicUploader
-                        isOpen={open}
-                        onClose={OnClose}
-                        onOpen={OnOpen}
-                        selectedFile={selectedFile}
-                        setSelectedFile={setSelectedFile}
-                    />
+                <div className="flex flex-col items-center gap-2">
+                    <div className="avaterDiv border-2 rounded-full border-blue-500 p-1">
+                        {/* <Avatar src="https://docs.material-tailwind.com/img/face-2.jpg" alt="avatar" /> */}
+                        <Model
+                            name="Upload Image"
+                            src="https://docs.material-tailwind.com/img/face-2.jpg"
+                        >
+                            <FileUploaderCard
+                                isOpen={open}
+                                onClose={OnClose}
+                                onOpen={OnOpen}
+                                selectedFile={selectedFile}
+                                setSelectedFile={setSelectedFile}
+                            />
+                        </Model>
+                    </div>
+                    <Typography> Upload Profile Picture </Typography>
                 </div>
+
                 <div >
 
                     <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="Name">
@@ -92,7 +102,7 @@ export default function RegisterPage() {
                         type="button"
                         variant="contained"
                         onClick={handleRegister}
-                        // loading={loading}
+                    // loading={loading}
                     >
                         Register
                     </Button>

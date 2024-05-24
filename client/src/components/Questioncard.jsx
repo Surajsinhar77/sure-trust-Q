@@ -87,10 +87,10 @@ export default function Questioncard() {
           <ShareIcon />
         </IconButton>
         <Box>
-          <Model fun={AnswerForm}/> 
-            {/* <AnswerForm/>  */}
+          <Model name={'Answer'}> 
+            <AnswerForm/> 
             {/* <Button variant='outlined' color="success"> Answer </Button> */}
-          {/* </Model> */}
+          </Model>
         </Box>
         <Box>
           <Button variant='outlined' color="success"> AI Solution </Button>

@@ -4,23 +4,18 @@ import { Fragment } from 'react';
 import { FaCamera } from "react-icons/fa";
 import { Avatar, Tooltip } from '@mui/material';
 
-function ProfilePicUploader({ isOpen, onClose , onOpen, selectedFile, setSelectedFile}) {
-  
-  console.log(" \n onClose", onClose, "     \n isOpen" , isOpen , " \n selectedFile", selectedFile)
-
+function ProfilePicUploader({ isOpen, onClose, onOpen, selectedFile, setSelectedFile }) {
   const handleFileChange = (e) => {
     setSelectedFile(e.target.files[0]);
   };
 
   const handleSubmit = () => {
-    // setSelectedFile(selectedFile);
     onClose();
   };
 
   return (
-    (isOpen)? 
-      (
-        <Transition.Root show={isOpen} as={Fragment}>
+    isOpen ? (
+      <Transition.Root show={isOpen} as={Fragment}>
         <Dialog as="div" className="fixed inset-0 z-10 overflow-y-auto" onClose={onClose}>
           <div className="flex items-center justify-center min-h-screen">
             <Transition.Child
@@ -34,7 +29,6 @@ function ProfilePicUploader({ isOpen, onClose , onOpen, selectedFile, setSelecte
             >
               <Dialog.Overlay className="fixed inset-0 bg-black opacity-30" />
             </Transition.Child>
-  
             <Transition.Child
               as={Fragment}
               enter="ease-out duration-300"
@@ -76,7 +70,7 @@ function ProfilePicUploader({ isOpen, onClose , onOpen, selectedFile, setSelecte
                     onClick={handleSubmit}
                     className="inline-flex justify-center px-4 py-2 text-sm font-medium text-white bg-blue-500 border border-transparent rounded-md hover:bg-blue-600 focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-blue-500"
                   >
-                     Select
+                    Select
                   </button>
                   <button
                     type="button"
@@ -91,11 +85,16 @@ function ProfilePicUploader({ isOpen, onClose , onOpen, selectedFile, setSelecte
           </div>
         </Dialog>
       </Transition.Root>
-      )
-      :
-      <Tooltip content="Upload yours profile picture">
-        <Avatar onClick={onOpen} src={selectedFile? URL.createObjectURL(selectedFile): "https://docs.material-tailwind.com/img/face-2.jpg"} alt="avatar" />
+    ) : (
+      <Tooltip title="Upload your profile picture">
+        <Avatar
+          onClick={onOpen}
+          src={selectedFile ? URL.createObjectURL(selectedFile) : "https://docs.material-tailwind.com/img/face-2.jpg"}
+          alt="avatar"
+          className="cursor-pointer"
+        />
       </Tooltip>
+    )
   );
 }
 

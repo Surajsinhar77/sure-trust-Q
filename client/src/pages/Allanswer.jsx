@@ -3,6 +3,7 @@ import CodeUI from "../components/CodeUI";
 import ImageSlider from "../components/ImageSlider";
 import AnswerPreview from "../components/AnswerPreview";
 import Model from '../components/Model';
+import AnswerForm from '../components/AnswerForm';
 
 const value = `void main() {
 }
@@ -71,7 +72,9 @@ export default function Allanswer() {
                 </Box>
 
                 <Box>
-                    {/* <Model /> */}
+                    <Model name='Answer'> 
+                        <AnswerForm />
+                    </Model>
                 </Box>
             </Box>
         </div>
