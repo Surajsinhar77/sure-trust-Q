@@ -1,12 +1,11 @@
 import React from 'react';
 import './AskQuestion.css';
-// import {useNavigate} from 'react-router-dom'
 import { Box, Button, TextField, Paper } from '@mui/material';
-// import { TextareaAutosize } from '@mui/base/TextareaAutosize'
 import CodeUI from '../components/CodeUI';
 import FileUploaderCard from '../components/FileUploaderCard';
 
 function AskQuestion({onClose}) {
+
     const [code, setCode] = React.useState('');
     
     function pleaseWrite() {
@@ -42,17 +41,18 @@ function AskQuestion({onClose}) {
                             <CodeUI value={code} onChange={setCode} />
                         </label>
                     </Box>
-                    <Box className='flex flex-row gap-4 items-center'>
+                    {/* <Box className='flex flex-row gap-4 items-center'>
                         <Button
                             variant="contained"
                             className='font-bold text-lg w-1/4'
                         > Post the Answer </Button>
-                        <Button
-                            variant="contained"
-                            className='font-bold text-lg w-1/4'
-                            onClick={onClose}
-                        > Cancel </Button>
-                    </Box>
+                        
+                        //  <Button
+                        //     variant="contained"
+                        //     className='font-bold text-lg w-1/4'
+                        //     onClick={onClose}
+                        // > Cancel </Button> 
+                    </Box> */}
                 </form>
             {/* </Box> */}
         </Box>

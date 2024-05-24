@@ -6,6 +6,20 @@ import { useNavigate } from "react-router-dom";
 import FileUploaderCard from "../components/FileUploaderCard";
 import Model from "../components/Model";
 
+
+const style = {
+    position: 'absolute',
+    top: '20%',
+    left: '50%',
+    transform: 'translate(-50%, -50%)',
+    width: 500,
+    Height: '90vh',
+    bgcolor: '#f1f2f3',
+    border: '1px solid #000',
+    boxShadow: 24,
+    p: 4,
+  };
+
 export default function RegisterPage() {
     const [selectedFile, setSelectedFile] = useState(null);
     const [userDetail, SetUserDetail] = useState('');
@@ -42,6 +56,7 @@ export default function RegisterPage() {
                         <Model
                             name="Upload Image"
                             src="https://docs.material-tailwind.com/img/face-2.jpg"
+                            style={style}
                         >
                             <FileUploaderCard
                                 isOpen={open}

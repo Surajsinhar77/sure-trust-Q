@@ -22,6 +22,18 @@ import Model from './Model';
 import { Link } from 'react-router-dom';
 import AnswerForm from './AnswerForm';
 
+const style = {
+  position: 'absolute',
+  top: '60%',
+  left: '50%',
+  transform: 'translate(-50%, -50%)',
+  width: 1024,
+  Height: '90vh',
+  bgcolor: '#f1f2f3',
+  border: '1px solid #000',
+  boxShadow: 24,
+  p: 4,
+};
 
 const value = `void main() {
 }
@@ -44,6 +56,9 @@ const ExpandMore = styled((props) => {
 
 export default function Questioncard() {
   const [expanded, setExpanded] = React.useState(false);
+  const [open, setOpen] = React.useState(false);
+  const onClose = () => setOpen(false);
+  const onOpen = () => setOpen(true);
 
   const handleExpandClick = () => {
     setExpanded(!expanded);
@@ -87,10 +102,13 @@ export default function Questioncard() {
           <ShareIcon />
         </IconButton>
         <Box>
-          <Model name={'Answer'}> 
-            <AnswerForm/> 
-            {/* <Button variant='outlined' color="success"> Answer </Button> */}
+          {/* ==========================================================================================> */}
+
+          <Model name={'Answer'} style={style}> 
+            <AnswerForm onClose={onClose}/> 
           </Model>
+
+          {/* =============================================================================================> */}
         </Box>
         <Box>
           <Button variant='outlined' color="success"> AI Solution </Button>
