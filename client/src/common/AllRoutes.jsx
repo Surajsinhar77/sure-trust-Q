@@ -7,18 +7,37 @@ import AboutUs from "../pages/AboutUs";
 import MyQuestion from "../pages/MyQuestion";
 import Allanswer from "../pages/Allanswer";
 import Test from "../pages/Test";
+import NotFound from '../pages/NotFound';
+import { useAuth } from "../common/AuthProvider";
+import UserProfile from "../pages/UserProfile";
+
 
 export default function AllRoutes() {
+  const { user } = useAuth();
+
   return (
     <Routes>
-      <Route path="/*" element={<Home />} />
-      <Route path="ask-question" element={<AskQuestion />} />
-      <Route path="about-us" element={<AboutUs />} />
-      <Route path="/login" element={<Login />} />
-      <Route path="/register" element={<Register />} />
-      <Route path="/my-questions" element={<MyQuestion />} />
-      <Route path="/all-answer" element={<Allanswer />} />
-      <Route path='/test' element={<Test/>} />
+
+      {
+        user ?
+          <>
+            <Route path="/*" element={<Home />} />
+            <Route path="ask-question" element={<AskQuestion />} />
+            <Route path="about-us" element={<AboutUs />} />
+            <Route path="/my-questions" element={<MyQuestion />} />
+            <Route path="/all-answer" element={<Allanswer />} />
+            <Route path='/test' element={<Test />} />
+            <Route path="*" element={<Home />} />
+            <Route path="/profile" element={<UserProfile />} />
+          </>
+          :
+          <>
+            <Route path="/login" element={<Login />} />
+            <Route path="/register" element={<Register />} />
+            <Route path="*" element={< NotFound/>} />
+          </>
+      }
+
     </Routes>
   );
 }

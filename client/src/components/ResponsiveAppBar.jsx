@@ -13,6 +13,7 @@ import Tooltip from '@mui/material/Tooltip';
 import MenuItem from '@mui/material/MenuItem';
 import AdbIcon from '@mui/icons-material/Adb';
 import { Link } from 'react-router-dom';
+import { PiSealQuestionDuotone } from "react-icons/pi";
 
 const pages = [
   { name: 'Questions', link: 'my-questions' },
@@ -46,15 +47,15 @@ function ResponsiveAppBar() {
     <AppBar position="static" className='mb-5'>
       <Container maxWidth="xl">
         <Toolbar disableGutters>
-          <AdbIcon sx={{ display: { xs: 'none', md: 'flex' }, mr: 1 }} />
-          <Link to='/'>
+
+          <Link to='/' className='text-center flex flex-col items-center py-3 mr-5'>
+            <PiSealQuestionDuotone className='text-3xl text-fuchsia-50' />
             <Typography
               variant="h6"
               noWrap
-              component="a"
-              href="/"
+              component="p"
+              className='text-2xl font-bold text-fuchsia-50 text-center'
               sx={{
-                mr: 2,
                 display: { xs: 'none', md: 'flex' },
                 fontFamily: 'monospace',
                 fontWeight: 700,
@@ -63,7 +64,7 @@ function ResponsiveAppBar() {
                 textDecoration: 'none',
               }}
             >
-              ST/Q&A
+              Sq&a
             </Typography>
           </Link>
 
@@ -97,9 +98,9 @@ function ResponsiveAppBar() {
               }}
             >
               {pages.map((page, index) => (
-                <Link key={index} to={page.link}>
+                <Link key={index} to={page.link} className='hover: underline'>
                   <MenuItem key={page.name} href={page?.link} onClick={handleCloseNavMenu}>
-                    <Typography textAlign="center">{page.name}</Typography>
+                    <Typography textAlign="center" className='py-2 px-4'>{page.name}</Typography>
                   </MenuItem>
                 </Link>
               ))}
@@ -110,7 +111,7 @@ function ResponsiveAppBar() {
             <Typography
               variant="h5"
               noWrap
-              component="a"
+              component="p"
               sx={{
                 mr: 2,
                 display: { xs: 'flex', md: 'none' },
@@ -127,11 +128,12 @@ function ResponsiveAppBar() {
           </Link>
           <Box sx={{ flexGrow: 1, display: { xs: 'none', md: 'flex' } }}>
             {pages.map((page, index) => (
-              <Link key={index} to={`/${page.link}`}>
+              <Link key={index} to={`/${page.link}`} className='hover:underline'>
                 <Button
                   key={page.name}
                   onClick={handleCloseNavMenu}
                   sx={{ my: 2, color: 'white', display: 'block' }}
+                  className='py-2 px-4'
                 >
                   {page.name}
                 </Button>
@@ -161,10 +163,12 @@ function ResponsiveAppBar() {
               open={Boolean(anchorElUser)}
               onClose={handleCloseUserMenu}
             >
-              {settings.map((setting) => (
-                <MenuItem key={setting} onClick={handleCloseUserMenu}>
+              {settings.map((setting, index) => (
+                <Link key={index} to={`/${setting.toLowerCase()}`}>
+                  <MenuItem key={setting} onClick={handleCloseUserMenu}>
                   <Typography textAlign="center">{setting}</Typography>
                 </MenuItem>
+                </Link>
               ))}
             </Menu>
           </Box>

@@ -11,6 +11,7 @@ export default function Home() {
       <div  className=" flex flex-col gap-6">
         <Questioncard/>
         <Questioncard/>
+        <Questioncard/>
       </div>
       <Outlet/>
     </Box>

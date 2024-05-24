@@ -2,13 +2,16 @@ import './App.css'
 import AllRoutes from './common/AllRoutes'
 import ResponsiveAppBar from './components/ResponsiveAppBar';
 import Footer from './components/Footer';
+import { useAuth } from './common/AuthProvider';
 
 function App() {
+  const { user } = useAuth()
+
   return (
     <>
-      <ResponsiveAppBar />
+      {user? <ResponsiveAppBar/> : ""}
       <AllRoutes />
-      <Footer />
+      {user?  <Footer /> : ""}
     </>
   )
 }

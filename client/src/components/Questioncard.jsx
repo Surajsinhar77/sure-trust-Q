@@ -8,7 +8,7 @@ import CardActions from '@mui/material/CardActions';
 import Collapse from '@mui/material/Collapse';
 import Avatar from '@mui/material/Avatar';
 import IconButton from '@mui/material/IconButton';
-import {Typography} from '@mui/material';
+import { Typography } from '@mui/material';
 import { red } from '@mui/material/colors';
 import FavoriteIcon from '@mui/icons-material/Favorite';
 import ShareIcon from '@mui/icons-material/Share';
@@ -81,49 +81,61 @@ export default function Questioncard() {
         subheader="September 14, 2016"
       />
       {/* <ImgPostSection/> */}
-      <CardMedia
-        component="img"
-        className='h-96'
-        image="https://images.unsplash.com/photo-1551963831-b3b1ca40c98e"
-        alt="Paella dish"
-      />
+
       <CardContent>
         <Link to='/all-answer' className='text-lg text-slate-700 hover:text-blue-300'>
-          This impressive paella is a perfect party dish and a fun meal to cook
-          together with your guests. Add 1 cup of frozen peas along with the mussels,
-          if you like.
+          <Typography
+            fontSize={17}
+          >
+            This impressive paella is a perfect party dish and a fun meal to cook
+            together with your guests. Add 1 cup of frozen peas along with the mussels,
+            if you like.
+          </Typography>
         </Link>
       </CardContent>
       <CardActions disableSpacing className='gap-2'>
+
+        <Box>
+          {/* ==========================================================================================> */}
+
+          <Model name={'Answer'} style={style}>
+            <AnswerForm onClose={onClose} />
+          </Model>
+
+          {/* =============================================================================================> */}
+        </Box>
+
+        <Box>
+          <Button variant='outlined' color="success"> AI Solution </Button>
+        </Box>
+
+        {/* Icons Start--------------------------------------------------------------------------------- */}
         <IconButton aria-label="add to favorites">
           <FavoriteIcon />
         </IconButton>
         <IconButton aria-label="share">
           <ShareIcon />
         </IconButton>
-        <Box>
-          {/* ==========================================================================================> */}
+        {/* Icons End --------------------------------------------------------------------------------- */}
 
-          <Model name={'Answer'} style={style}> 
-            <AnswerForm onClose={onClose}/> 
-          </Model>
 
-          {/* =============================================================================================> */}
-        </Box>
-        <Box>
-          <Button variant='outlined' color="success"> AI Solution </Button>
-        </Box>
         <ExpandMore
           expand={expanded}
           onClick={handleExpandClick}
           aria-expanded={expanded}
           aria-label="show more"
         >
-          <ExpandMoreIcon />
+          <ExpandMoreIcon className='text-red-500'/>
         </ExpandMore>
       </CardActions>
       <Collapse in={expanded} timeout="auto" unmountOnExit>
         <CardContent>
+          <CardMedia
+            component="img"
+            className='h-96'
+            image="https://images.unsplash.com/photo-1551963831-b3b1ca40c98e"
+            alt="Paella dish"
+          />
           <Typography paragraph>Method:</Typography>
           <Typography paragraph>
             Heat 1/2 cup of the broth in a pot until simmering, add saffron and set
@@ -152,7 +164,7 @@ export default function Questioncard() {
         </CardContent>
 
         <CardContent>
-          <CodeUI value={value}/>
+          <CodeUI value={value} />
         </CardContent>
       </Collapse>
     </Card>

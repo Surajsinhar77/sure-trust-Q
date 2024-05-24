@@ -1,10 +1,12 @@
 import { Typography } from "@mui/material";
- 
+import { PiSealQuestionDuotone } from "react-icons/pi";
+
+
 export default function FooterWithLogo() {
   return (
     <footer className="w-full bg-white p-8 mt-10">
       <div className="flex flex-row flex-wrap items-center justify-center gap-y-6 gap-x-12 bg-white text-center md:justify-between">
-        <img src="https://docs.material-tailwind.com/img/logo-ct-dark.png" alt="logo-ct" className="w-10" />
+      <PiSealQuestionDuotone className="text-4xl text-vo"/>
         <ul className="flex flex-wrap items-center gap-y-2 gap-x-8">
           <li>
             <Typography

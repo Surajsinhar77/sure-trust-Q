@@ -3,7 +3,7 @@ import { useContext, createContext, useState } from "react";
 const context = createContext();
 
 export default function AuthProvider({children}) {
-    const [user, setUser] = useState(null)
+    const [user, setUser] = useState(true)
 
     return (
         <context.Provider
