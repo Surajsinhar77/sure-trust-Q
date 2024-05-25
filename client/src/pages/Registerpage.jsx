@@ -5,6 +5,7 @@ import { useAuth } from "../common/AuthProvider";
 import { useNavigate } from "react-router-dom";
 import FileUploaderCard from "../components/FileUploaderCard";
 import Model from "../components/Model";
+import { RegisterUser } from "../common/AuthHandler/apiHandler";
 
 
 const style = {
@@ -32,12 +33,7 @@ export default function RegisterPage() {
         const { name, value } = e.target;
         SetUserDetail({ ...userDetail, [name]: value });
     }
-
-    const handleRegister = async () => {
-        // Handle registration logic here
-        console.log("handleRegister");
-    };
-
+    
     function OnClose() {
         setOpen(false);
     }
@@ -45,6 +41,12 @@ export default function RegisterPage() {
     function OnOpen() {
         setOpen(true);
     }
+
+    const handleRegister = async () => {
+        // Handle registration logic here
+        console.log("handleRegister");
+        RegisterUser(userDetail, setLoading, navigate);
+    };
 
     return (
         <div className=" flex flex-col items-center justify-center h-screen gap-3">

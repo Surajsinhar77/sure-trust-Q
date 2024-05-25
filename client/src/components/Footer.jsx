@@ -52,7 +52,7 @@ export default function FooterWithLogo() {
       </div>
       <hr className="my-8 border-blue-gray-50" />
       <Typography color="blue-gray" className="text-center font-normal">
-        &copy; 2023 Material Tailwind
+        &copy; 2023 SureTrust | Q & A
       </Typography>
     </footer>
   );

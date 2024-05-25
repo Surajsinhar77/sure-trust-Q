@@ -1,4 +1,8 @@
 import { toast } from "react-toastify";
+import params from './params.json';
+import { useAuth } from "../AuthProvider";
+
+const { login, register } = useAuth();
 
 const notify = (message, { type }) => {
     if (type) {
@@ -50,12 +54,12 @@ export async function LoginUser(userDeatil, setLoading, navigate) { //userDeatil
 }
 
 
-
 export async function RegisterUser(userDetail, setLoading, navigate) {
     setLoading(true);
+    console.log("RegisterUser",    userDetail)
     try {
-        if (!userDetail.name || !userDetail.email || !userDetail.password || !selectedFile) {
-            if (!userDetail.name) {
+        if (!userDetail.Name || !userDetail.email || !userDetail.password || !selectedFile) {
+            if (!userDetail.Name) {
                 notify("Please enter the name", false);
             } else if (!userDetail.email) {
                 notify("Please enter the email", false);

@@ -39,7 +39,6 @@ const userSchema = new mongoose.Schema({
     phoneNo: {
         type: String,
         default: '',
-        required: true,
     },
 
     github: {
