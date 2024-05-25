@@ -1,9 +1,9 @@
 const app = require('../application/app');
-const { registerUser } = require('../controller/user.controller.js');
+const { registerUser, loginUser} = require('../controller/user.controller');
 const router = app.Router();
 
-router.post('/login', );
-router.post('/signup', registerUser);
+router.route('/signup').post(registerUser);
+router.route('/login').post(loginUser);
 
 
 export default router;
