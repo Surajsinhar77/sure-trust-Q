@@ -1,8 +1,8 @@
 import { toast } from "react-toastify";
 import params from './params.json';
-import { useAuth } from "../AuthProvider";
+// import { useAuth } from "../AuthProvider";
 
-const { login, register } = useAuth();
+// const { login, register } = useAuth();
 
 const notify = (message, { type }) => {
     if (type) {
