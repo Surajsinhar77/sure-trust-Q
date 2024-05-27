@@ -79,5 +79,18 @@ const userSchema = new mongoose.Schema({
 }, { timestamps: true });
 
 
+userSchema.methods.genrateRefreshToken = function() {
+    const user = this;
+    const refreshToken = jwt.sign({ _id: user._id }, process.env.REFRESH_TOKEN_SECRET, { expiresIn: '7d' });
+    user.refreshToken = refreshToken;
+    return refreshToken;
+}
+
+userSchema.methods.genrateAccessToken = function() {
+    const user = this;
+    const accessToken = jwt.sign({ _id: user._id }, process.env.ACCESS_TOKEN_SECRET, { expiresIn: '15m' });
+    return accessToken;
+}
+
 const User = mongoose.model('User', userSchema);
 export default User;
