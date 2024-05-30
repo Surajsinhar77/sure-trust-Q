@@ -101,9 +101,31 @@ const updateCourse = async (req, res) => {
     }
 }
 
+const deleteCourse = async (req, res) => {
+    try {
+        const userRole = req.user.role;
+        if (userRole !== 'admin') {
+            return new ErrorHandling(403, null, 'You are not allowed to delete course');
+        }
+
+        const courseId = z.string().parse(req.params.id);
+        const course = await courseModels.findById(courseId);
+        if (!course) {
+            throw new ErrorHandling(404, 'Course not found');
+        }
+        course.remove();
+        await courseModels.findByIdAndDelete(courseId);
+        return new ApiResponse(200, null, 'Course deleted successfully').send(res);
+    } catch (err) {
+        return new ErrorHandling(500, null, err.message);
+    }
+}
+
 module.exports = {
     addCourse,
     getCourse,
     getCourseById,
-    updateCourse
+    updateCourse,
+    updateCourse,
+    deleteCourse
 }

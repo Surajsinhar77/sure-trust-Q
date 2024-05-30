@@ -23,5 +23,11 @@ const courseSchema = new mongoose.Schema({
     },
 }, { timestamps: true });
 
+
+courseSchema.pre('remove', async function(next) {
+    await this.model('Batch').deleteMany({ courseId: this._id });
+    next();
+});
+
 const Course = mongoose.model('Course', courseSchema);
 export default Course;

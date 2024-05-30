@@ -148,7 +148,6 @@ const deleteQuestion = async (req, res) =>{
     }catch(err){
         return new ErrorHandling(500, err.message);
     }
-
 }
 
 module.exports ={
