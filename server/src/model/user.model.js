@@ -92,5 +92,9 @@ userSchema.methods.genrateAccessTkn = function() {
     })
 }
 
+userSchema.methods.isPasswordMatch = async function(password) {
+    return await bcrypt.compare(password, this.password);
+}
+
 const User = mongoose.model('User', userSchema);
 export default User;
