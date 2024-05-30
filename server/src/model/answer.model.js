@@ -6,6 +6,7 @@ const answerSchema = new mongoose.Schema({
         ref: 'User',
         required: true,
     },
+    
     questionId: {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'Question',
@@ -23,8 +24,8 @@ const answerSchema = new mongoose.Schema({
     },
     
     images : {
-        type: String,
-        default: '',
+        type: [String],
+        default: [''],
     },
 }
 , { timestamps: true });

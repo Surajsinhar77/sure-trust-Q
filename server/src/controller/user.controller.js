@@ -72,7 +72,7 @@ async function registerUser(req, res) {
             if (!userCreated) {
                 return new ErrorResponse(404, 'User is not created');
             }
-            return new ApiResponse(200, userCreated, 'User is created successfully');
+            return new ApiResponse(200, userCreated, 'User is created successfully').send(res);
         } else {
             const user = new userModel({
                 name: userData.name,
@@ -84,7 +84,7 @@ async function registerUser(req, res) {
             if (!userCreated) {
                 return new ErrorResponse(404, 'User is not created');
             }
-            return new ApiResponse(200, userCreated, 'User is created successfully');
+            return new ApiResponse(200, userCreated, 'User is created successfully').send(res);
         }
     } catch (err) {
         res.clearCookie('accessToken');
@@ -138,7 +138,7 @@ async function loginUser(req, res) {
         res.cookie("refreshToken", refreshToken, options);
         res.setHeader('Authorization', `Bearer ${accessToken}`);
         res.setHeader('Authorization', `Bearer ${refreshToken}`);
-        return new ApiResponse(200, userResult, "User is sucessfull Login");
+        return new ApiResponse(200, userResult, "User is sucessfull Login").send(res);
     } catch (err) {
         res.clearCookie('accessToken');
         throw new ErrorResponse(404, err.message);

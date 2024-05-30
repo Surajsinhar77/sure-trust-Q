@@ -48,7 +48,7 @@ async function addQuestion(req, res){
             images: images,
             batchId: questionDetailVaild.batchId,
         });
-        return new ApiResponse(201, question, 'Question added successfully' );
+        return new ApiResponse(201, question, 'Question added successfully' ).send(res);
     }catch(err){
         return new ErrorHandling(500, null, err.message);
     }
@@ -87,13 +87,74 @@ async function getQuestion(req, res){
             questions,
             pagination
         }
-        return new ApiResponse(200, result, 'Questions fetched successfully');
+        return new ApiResponse(200, result, 'Questions fetched successfully').send(res);
     }catch(err){
         return new ErrorHandling(500, null, err.message);
     }
 };
 
+
+const getQuestionById = async (req, res) =>{
+    try{
+        const question = await questionModel.findById(req.params.id);
+        if(!question){
+            throw new ErrorHandling(404, 'Question not found');
+        }
+        return new ApiResponse(200, question, 'Question fetched successfully').send(res);
+    }catch(err){
+        return new ErrorHandling(500, err.message);
+    }
+}
+
+const addQuestionValidForUpdate = z.object({
+    courseId: z.string().optional(),
+    title: z.string().optional(),
+    text: z.string().optional(),
+    codeSnippet: z.string().optional(),
+    tags: z.string().optional(),
+  }).refine(data => Object.values(data).some(value => value !== undefined), {
+    message: "At least one field must be provided.",
+    path: [], // this refers to the entire object
+  });
+  
+
+const updateQuestion = async (req, res) =>{
+    try{
+        const question = await questionModel.findById(req.params.id);
+        if(!question){
+            throw new ErrorHandling(404, 'Question not found');
+        }
+        const updateQuestion = req.body;
+        const updateQuestionVaild = addQuestionValidForUpdate.parse(updateQuestion);
+
+        const updatedQuestion = await questionModel.findByIdAndUpdate(req.params.id,{
+            updateQuestionVaild
+        } , {new: true});
+        return new ApiResponse(200, updatedQuestion, 'Question updated successfully').send(res);
+    }catch(err){
+        return new ErrorHandling(500, err.message);
+    }
+}
+
+const deleteQuestion = async (req, res) =>{
+    try{
+        const question = await questionModel.findById(req.params.id);
+        if(!question){
+            throw new ErrorHandling(404, 'Question not found');
+        }
+        question.remove();
+        await questionModel.findByIdAndDelete(req.params.id);
+        return new ApiResponse(200, null, 'Question deleted successfully').send(res);
+    }catch(err){
+        return new ErrorHandling(500, err.message);
+    }
+
+}
+
 module.exports ={
     addQuestion,
-    getQuestion
+    getQuestion,
+    getQuestionById,
+    updateQuestion,
+    deleteQuestion
 }
