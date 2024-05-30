@@ -18,6 +18,10 @@ const enrollmentSchema = new mongoose.Schema({
         ref: 'Batch',
         required: true,
     },
+    allowed: {
+        type: Boolean,
+        default: false,
+    },
 }, { timestamps: true });
 
 
