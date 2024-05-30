@@ -7,22 +7,22 @@ export default function AuthProvider({children}) {
     //     const user = localStorage.getItem("user");
     //     return user ? JSON.parse(user) : null;
     // })
-const [user, setUser] = useState(false)
+const [user, setUser] = useState(true)
 
-    // function register(user) {
-    //     localStorage.setItem("user", JSON.stringify(user));
-    //     setUser(user);
-    // }
+    function register(user) {
+        localStorage.setItem("user", JSON.stringify(user));
+        setUser(user);
+    }
 
-    // function login(user) {
-    //     localStorage.setItem("user", JSON.stringify(user));
-    //     setUser(user);
-    // }
+    function login(user) {
+        localStorage.setItem("user", JSON.stringify(user));
+        setUser(user);
+    }
 
-    // function logout() {
-    //     localStorage.removeItem("user");
-    //     setUser(null);
-    // }   
+    function logout() {
+        localStorage.removeItem("user");
+        setUser(null);
+    }   
 
     return (
         <context.Provider

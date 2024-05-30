@@ -31,8 +31,8 @@ const questionSchema = new mongoose.Schema({
     },
     
     images: {
-        type: String,
-        default: '',
+        type: [String],
+        default: [''],
     },
 
     batchId : {

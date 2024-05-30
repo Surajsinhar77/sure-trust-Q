@@ -1,5 +1,6 @@
 const userModel = require('../model/user.model');
 const z = require('zod');
+const jwt = require('jsonwebtoken');
 const bcrypt = require('bcrypt');
 // const { genrateAccessToken, genrateRefreshToken } = require('../service/genrateToken.service');
 const ErrorResponse = require('../utlity/errorResponse');
@@ -44,7 +45,7 @@ async function registerUser(req, res) {
 
         if (isUserExist) {
             res.clearCookie('accessToken');
-            throw new ErrorResponse('User already registered', 409);
+            throw new ErrorResponse(409,'User already registered');
         }
 
         if (!profileImageLocalAddress) {
@@ -87,7 +88,7 @@ async function registerUser(req, res) {
         }
     } catch (err) {
         res.clearCookie('accessToken');
-        throw new ErrorResponse(err.message, 404);
+        throw new ErrorResponse(404, err.message);
     }
 }
 
@@ -107,20 +108,20 @@ async function loginUser(req, res) {
         const userExist = await userModel.findOne({ email: userData.email });
         if (!userExist) {
             res.clearCookie('accessToken');
-            throw new ErrorResponse('User is not found', 404);
+            throw new ErrorResponse(404, 'User is not found');
         }
 
         const isPasswordMatch = await bcrypt.compare(userData.password, userExist.password);
         if (!isPasswordMatch) {
             res.clearCookie('accessToken');
-            throw new ErrorResponse('Password is not correct', 404);
+            throw new ErrorResponse(404 ,'Password is not correct');
         }
 
         const isPasswordVaild = userExist.isPasswordMatch(userData.password);
 
         if (!isPasswordVaild) {
             res.clearCookie('accessToken');
-            throw new ErrorResponse('Password is not correct', 404);
+            throw new ErrorResponse(404 , 'Password is not correct');
         }
 
 
@@ -140,7 +141,7 @@ async function loginUser(req, res) {
         return new ApiResponse(200, userResult, "User is sucessfull Login");
     } catch (err) {
         res.clearCookie('accessToken');
-        throw new ErrorResponse(err.message, 404);
+        throw new ErrorResponse(404, err.message);
     }
 }
 
@@ -171,12 +172,60 @@ const logoutUser = async (req, res) => {
             .json(new ApiResponse(200, {}, "User logged Out"))
     }
     catch (err) {
-        throw new ErrorResponse(err.message, 404);
+        throw new ErrorResponse(404, err.message);
+    }
+}
+
+const refreshAccessToken = async (req, res) => {
+    const incomingRefreshToken = req.cookies.refreshToken || req.body.refreshToken
+
+    if (!incomingRefreshToken) {
+        throw new ErrorResponse(401, "unauthorized request")
+    }
+
+    try {
+        const decodedToken = jwt.verify(
+            incomingRefreshToken,
+            process.env.REFRESH_TOKEN_SECRET
+        )
+    
+        const user = await userModel.findById(decodedToken?._id);
+    
+        if (!user) {
+            throw new ErrorResponse(401, "Invalid refresh token");
+        }
+    
+        if (incomingRefreshToken !== user?.refreshToken) {
+            throw new ErrorResponse(401, "Refresh token is expired or used")
+            
+        }
+    
+        const options = {
+            httpOnly: true,
+            secure: true
+        }
+    
+        const {accessToken, newRefreshToken} = await generateAccessAndRefereshTokens(user._id)
+    
+        return res
+        .status(200)
+        .cookie("accessToken", accessToken, options)
+        .cookie("refreshToken", newRefreshToken, options)
+        .json(
+            new ApiResponse(
+                200, 
+                {accessToken, refreshToken: newRefreshToken},
+                "Access token refreshed"
+            )
+        )
+    } catch (error) {
+        throw new ErrorResponse(401, error?.message || "Invalid refresh token")
     }
 }
 
 module.exports = {
     registerUser,
     loginUser,
-    logoutUser
+    logoutUser,
+    refreshAccessToken
 }
