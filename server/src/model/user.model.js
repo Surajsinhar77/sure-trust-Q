@@ -1,5 +1,5 @@
 const mongoose = require('mongoose');
-
+const {genrateAccessToken, genrateRefreshToken} = require('../service/genrateToken.service');
 const role = ['admin', 'user' ,'teacher'];
 
 const userSchema = new mongoose.Schema({
@@ -79,17 +79,17 @@ const userSchema = new mongoose.Schema({
 }, { timestamps: true });
 
 
-userSchema.methods.genrateRefreshToken = function() {
-    const user = this;
-    const refreshToken = jwt.sign({ _id: user._id }, process.env.REFRESH_TOKEN_SECRET, { expiresIn: '7d' });
-    user.refreshToken = refreshToken;
-    return refreshToken;
+userSchema.methods.genrateRefToken = function() {
+    return genrateRefreshToken({_id : this._id});
 }
 
-userSchema.methods.genrateAccessToken = function() {
-    const user = this;
-    const accessToken = jwt.sign({ _id: user._id }, process.env.ACCESS_TOKEN_SECRET, { expiresIn: '15m' });
-    return accessToken;
+userSchema.methods.genrateAccessTkn = function() {
+    return genrateAccessToken({
+        _id : this._id,
+        email : this.email,
+        name : this.name,
+        role : this.role,
+    })
 }
 
 const User = mongoose.model('User', userSchema);

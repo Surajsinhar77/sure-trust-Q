@@ -1,7 +1,7 @@
 const userModel = require('../model/user.model');
 const z = require('zod');
 const bcrypt = require('bcrypt');
-const serviceAuth = require('../service/auth.service');
+const {acccessToken, refreshToken, refreshToken} = require('../service/genrateToken.service');
 const ErrorResponse = require('../utlity/errorResponse');
 const ApiResponse = require('../utlity/responseHandling');
 
@@ -45,9 +45,10 @@ async function registerUser(req, res) {
                 profileImage: req.cloudinaryUrl,
             });
 
-            const token = serviceAuth.createUserToken({ id: user._id, email: user.email });
-
-            const updateUserToken = await userModel.findOneAndUpdate({ email: userData.email }, { $set: { token: token } }, { new: true })
+            const accessToken = acccessToken({ id: user._id, email: user.email });
+            const refreshToken = refreshToken({ id: user._id});
+            
+            const updateUserToken = await userModel.findOneAndUpdate({ email: userData.email }, { $set: { refreshToken: re } }, { new: true })
 
             const options = {
                 httpOnly: true,
@@ -97,6 +98,7 @@ async function loginUser(req, res) {
             res.clearCookie('accessToken');
             throw new ErrorResponse('Password is not correct', 404);
         }
+        
         const token = serviceAuth.createUserToken({ id: userExist._id, email: userExist.email });
 
         const updateUserToken = await userModel.findOneAndUpdate
