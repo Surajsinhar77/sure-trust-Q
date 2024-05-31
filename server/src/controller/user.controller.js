@@ -43,7 +43,7 @@ async function registerUser(req, res) {
         const isUserExist = await userModel.findOne({ email: userData.email });
 
         const profileImageLocalAddress = req?.file?.path;
-        
+
         if (!profileImageLocalAddress) {
             throw new ErrorResponse(404, 'Profile image is required');
         }
@@ -165,7 +165,7 @@ async function loginUser(req, res) {
         return new ApiResponse(200, userResult, "User is sucessfull Login").send(res);
     } catch (err) {
         res.clearCookie('accessToken');
-        throw new ErrorResponse(404, err.message);
+        return res.status(err.statusCode || 500).json(new ApiResponse(err.statusCode || 500, {}, err.message));
     }
 }
 
