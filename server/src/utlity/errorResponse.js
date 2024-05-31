@@ -8,7 +8,7 @@ class ErrorHandling extends Error{
     }
 }
 
-export default ErrorHandling;
+module.exports = ErrorHandling;
 
 
 // constructor(status, message, error) {

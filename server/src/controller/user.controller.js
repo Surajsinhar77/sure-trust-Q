@@ -223,9 +223,75 @@ const refreshAccessToken = async (req, res) => {
     }
 }
 
+const getUser = async (req, res) => {
+    try {
+        const user = await userModel.findById(req.params.id).select('-password', '-refreshToken');
+        if (!user) {
+            throw new ErrorResponse(404, 'User is not found');
+        }
+        return new ApiResponse(200, user, 'User is found').send(res);
+    } catch (err) {
+        throw new ErrorResponse(404, err.message);
+    }
+}
+
+
+const getUsers = async (req, res) => {
+    try {
+        const users = await userModel.find().select('-password', '-refreshToken');
+        if (!users) {
+            throw new ErrorResponse(404, 'Users are not found');
+        }
+        return new ApiResponse(200, users, 'Users are found').send(res);
+    } catch (err) {
+        throw new ErrorResponse(404, err.message);
+    }
+}
+
+const deleteUser = async (req, res) => {
+    try {
+        const user = await userModel.findByIdAndDelete(req.params.id);
+        if (!user) {
+            throw new ErrorResponse(404, 'User is not found');
+        }
+        return new ApiResponse(200, {}, 'User is deleted').send(res);
+    } catch (err) {
+        throw new ErrorResponse(404, err.message);
+    }
+}
+
+const userDataRegisterForUpdate = z.object({
+    name: z.string().min(1, 'Name is required'),  // Name should be a non-empty string
+    email: z.string().email('Invalid email address'),  // Valid email format
+    password: z.string().regex(
+        /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/,
+        'Password must be at least 8 characters long and include at least one uppercase letter, one lowercase letter, one number, and one special character.'
+    ),
+    role: z.string().optional()
+}).refine(data => Object.keys(data).length > 0, {
+    message: 'At least one field is required'
+});
+
+const updateUser = async (req, res) => {
+    try {
+        const user = await userModel.findByIdAndUpdate(req.params.id, req.body, { new: true });
+        if (!user) {
+            throw new ErrorResponse(404, 'User is not found');
+        }
+        return new ApiResponse(200, user, 'User is updated').send(res);
+    }catch(err){
+        throw new ErrorResponse(404, err.message);
+    }
+}
+
+
 module.exports = {
     registerUser,
     loginUser,
     logoutUser,
-    refreshAccessToken
+    refreshAccessToken,
+    getUser,
+    getUsers,
+    deleteUser,
+    updateUser
 }

@@ -1,10 +1,9 @@
-import app from './application/app';
+const app = require('./application/app')
 require('dotenv').config();
-import db from './config/db';
-
+const db = require('./config/db');
 
 db();
 
 app.listen(8000, () => {
-  console.log('Server is running on http://localhost:3000');
+  console.log('Server is running on http://localhost:8000');
 });

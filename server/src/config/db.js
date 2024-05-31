@@ -1,4 +1,3 @@
-
 const mongoose = require('mongoose');
 
 const db = async () => {
@@ -14,4 +13,4 @@ const db = async () => {
     }
 }
 
-export default db;
+module.exports = db;
