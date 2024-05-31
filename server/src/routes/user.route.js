@@ -4,7 +4,7 @@ const { registerUser, loginUser, logoutUser, getUser, getUsers, deleteUser, upda
 const {upload} = require('../utlity/uploadImageFunction');
 const router = express.Router();
 
-router.route('/signup').post(registerUser, upload);
+router.route('/signup').post(upload,registerUser );
 router.route('/login').post(loginUser);
 router.route('/userById/:id').post(getUser);
 router.route('/users').get(getUsers);

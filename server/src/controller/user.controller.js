@@ -2,10 +2,11 @@ const userModel = require('../model/user.model');
 const z = require('zod');
 const jwt = require('jsonwebtoken');
 const bcrypt = require('bcrypt');
+const FileSystem = require('fs');
 // const { genrateAccessToken, genrateRefreshToken } = require('../service/genrateToken.service');
 const ErrorResponse = require('../utlity/errorResponse');
-const ApiResponse = require('../utlity/responseHandling');
-const { upload, uploadOnCloudinary } = require('../utlity/uploadImageFunction');
+const {ApiResponse} = require('../utlity/responseHandling');
+const { upload, uploadOnCloudinary, deleteFromCloudinary} = require('../utlity/uploadImageFunction');
 
 
 
@@ -38,57 +39,80 @@ const userDataRegister = z.object({
 
 async function registerUser(req, res) {
     try {
-        console.log("register function for user ", req);
         const userData = userDataRegister.parse(req.body);
         const isUserExist = await userModel.findOne({ email: userData.email });
-        const profileImageLocalAddress = req.file
+
+        const profileImageLocalAddress = req?.file?.path;
+        
+        if (!profileImageLocalAddress) {
+            throw new ErrorResponse(404, 'Profile image is required');
+        }
 
         if (isUserExist) {
-            res.clearCookie('accessToken');
-            throw new ErrorResponse(409,'User already registered');
+            // res.clearCookie('accessToken');
+            FileSystem.unlinkSync(profileImageLocalAddress);
+            throw new ErrorResponse(409, 'User already registered');
         }
 
-        if (!profileImageLocalAddress) {
-            return new ErrorResponse(404, 'Profile image is required');
-        }
-
-        const profileImage = await uploadOnCloudinary(profileImageLocalAddress);
-        console.log(profileImage);
-        if (!profileImage) {
-            return new ErrorResponse(404, 'Profile image is not uploaded');
+        const {public_id, image_url} = await uploadOnCloudinary(profileImageLocalAddress);
+        if (!image_url) {
+            throw new ErrorResponse(404, 'Profile image is not uploaded');
         }
 
         const hashedPassword = await bcrypt.hash(userData.password, 10);
 
-        if (userData.role) {
+        if (userData?.role) {
             const user = new userModel({
                 name: userData.name,
                 email: userData.email,
                 password: hashedPassword,
                 role: userData.role,
-                profileImage: profileImage.url
+                profilePicture: image_url
             });
-            const userCreated = await userModel.findById({ _id: user._id }).select('-password', '-refreshToken');
-            if (!userCreated) {
-                return new ErrorResponse(404, 'User is not created');
+            
+            const result = await user.save();
+            
+            if (!result) {
+                await deleteFromCloudinary(public_id);
+                throw new ErrorResponse(404, 'User is not created');
             }
-            return new ApiResponse(200, userCreated, 'User is created successfully').send(res);
+
+            const userCreated = await userModel.findById(result._id).select('-password -refreshToken');
+
+            if (!userCreated) {
+                await deleteFromCloudinary(public_id);
+                throw new ErrorResponse(404, 'User is not created');
+            }
+            return res.status(200).json(
+                new ApiResponse(201, userCreated, 'User is created successfully')
+            );
         } else {
-            const user = new userModel({
+            const user = await userModel.create({
                 name: userData.name,
                 email: userData.email,
                 password: hashedPassword,
-                profileImage: profileImage.url
+                profilePicture: image_url
             });
-            const userCreated = await userModel.findById({ _id: user._id }).select('-password', '-refreshToken');
-            if (!userCreated) {
-                return new ErrorResponse(404, 'User is not created');
+
+            if(!user) {
+                await deleteFromCloudinary(public_id);
+                throw new ErrorResponse(404, 'User is not created');
             }
-            return new ApiResponse(200, userCreated, 'User is created successfully').send(res);
+
+            const userCreated = await userModel.findById(user._id).select('-password -refreshToken');
+
+            if (!userCreated) {
+                await userModel.findByIdAndDelete(user._id);
+                await deleteFromCloudinary(public_id);
+                throw new ErrorResponse(404, 'User is not created');
+            }
+
+            return res.status(200).json(
+                new ApiResponse(201, userCreated, 'User is created successfully')
+            );
         }
     } catch (err) {
-        res.clearCookie('accessToken');
-        throw new ErrorResponse(404, err.message);
+        return res.status(err.statusCode || 500).json(new ApiResponse(err.statusCode || 500, {}, err.message));
     }
 }
 
@@ -114,14 +138,14 @@ async function loginUser(req, res) {
         const isPasswordMatch = await bcrypt.compare(userData.password, userExist.password);
         if (!isPasswordMatch) {
             res.clearCookie('accessToken');
-            throw new ErrorResponse(404 ,'Password is not correct');
+            throw new ErrorResponse(404, 'Password is not correct');
         }
 
         const isPasswordVaild = userExist.isPasswordMatch(userData.password);
 
         if (!isPasswordVaild) {
             res.clearCookie('accessToken');
-            throw new ErrorResponse(404 , 'Password is not correct');
+            throw new ErrorResponse(404, 'Password is not correct');
         }
 
 
@@ -188,36 +212,36 @@ const refreshAccessToken = async (req, res) => {
             incomingRefreshToken,
             process.env.REFRESH_TOKEN_SECRET
         )
-    
+
         const user = await userModel.findById(decodedToken?._id);
-    
+
         if (!user) {
             throw new ErrorResponse(401, "Invalid refresh token");
         }
-    
+
         if (incomingRefreshToken !== user?.refreshToken) {
             throw new ErrorResponse(401, "Refresh token is expired or used")
-            
+
         }
-    
+
         const options = {
             httpOnly: true,
             secure: true
         }
-    
-        const {accessToken, newRefreshToken} = await generateAccessAndRefereshTokens(user._id)
-    
+
+        const { accessToken, newRefreshToken } = await generateAccessAndRefereshTokens(user._id)
+
         return res
-        .status(200)
-        .cookie("accessToken", accessToken, options)
-        .cookie("refreshToken", newRefreshToken, options)
-        .json(
-            new ApiResponse(
-                200, 
-                {accessToken, refreshToken: newRefreshToken},
-                "Access token refreshed"
+            .status(200)
+            .cookie("accessToken", accessToken, options)
+            .cookie("refreshToken", newRefreshToken, options)
+            .json(
+                new ApiResponse(
+                    200,
+                    { accessToken, refreshToken: newRefreshToken },
+                    "Access token refreshed"
+                )
             )
-        )
     } catch (error) {
         throw new ErrorResponse(401, error?.message || "Invalid refresh token")
     }
@@ -279,7 +303,7 @@ const updateUser = async (req, res) => {
             throw new ErrorResponse(404, 'User is not found');
         }
         return new ApiResponse(200, user, 'User is updated').send(res);
-    }catch(err){
+    } catch (err) {
         throw new ErrorResponse(404, err.message);
     }
 }

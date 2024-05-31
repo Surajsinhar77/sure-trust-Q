@@ -7,8 +7,9 @@ const batchRoute = require('../routes/batch.route');
 const questionRoute = require('../routes/question.route');
 const answerRoute = require('../routes/answer.route');
 const endrollmentRoute = require('../routes/endrollment.routes');
+const testRoute = require('../test/test.route');
 const verifyToken = require('../middleware/auth.middleware');
-const {upload} = require('../utlity/uploadImageFunction')
+const {upload, uploadOnCloudinary} = require('../utlity/uploadImageFunction')
 const cookiesParser = require('cookie-parser')
 require('dotenv').config();
 
@@ -22,13 +23,9 @@ app.use(cors(
 ));
 app.use(express.json());
 
-app.post('/', upload,(req, res) => {
+app.post('/', async(_, res) => {
 
-    const file = req.file;
-    const filepath = file.path;
-    console.log("Test Api ", filepath);
-    console.log("Test Api ", file);
-    res.send(`
+    return res.send(`
         Welcome to the backend
         Endpoints: 
         /api/v1/user/auth  </br>
@@ -46,5 +43,6 @@ app.use('/api/v1/batch', verifyToken, batchRoute);
 app.use('/api/v1/question', verifyToken, questionRoute);
 app.use('/api/v1/answer', verifyToken, answerRoute);
 app.use('/api/v1/enrollment', verifyToken, endrollmentRoute);
+app.use('/api/v1/test', testRoute);
 
 module.exports = app;
