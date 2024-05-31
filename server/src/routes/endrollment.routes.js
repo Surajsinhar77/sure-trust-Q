@@ -1,7 +1,7 @@
 const express = require('express');
 const router = express.Router();
 
-const { addEnrollment, getEnrollment, getEnrollmentById, updateEnrollment, deleteEnrollment } = require('../controller/enrollment.controller');
+const { addEnrollment, getEnrollment, getEnrollmentById, updateEnrollment, deleteEnrollment } = require('../controller/endrollment.controller');
 
 router.route('/addEnrollment').post(addEnrollment);
 router.route('/getEnrollment').get(getEnrollment);

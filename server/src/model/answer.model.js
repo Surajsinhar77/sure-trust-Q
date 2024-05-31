@@ -31,4 +31,5 @@ const answerSchema = new mongoose.Schema({
 , { timestamps: true });
 
 const Answer = mongoose.model('Answer', answerSchema);
-export default Answer;
+
+module.exports = Answer;

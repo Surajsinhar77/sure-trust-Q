@@ -13,7 +13,9 @@ cloudinary.config({
 // Set up storage for uploaded files locally
 const localDiskStorage = multer.diskStorage({
     destination: (req, file, cb) => {
-        cb(null, 'uploads/profile-images/');
+        const dir = 'uploads/';
+        console.log("The file ",cb)
+        cb(null, dir);
     },
     filename: (req, file, cb) => {
         cb(null, Date.now() + '-' + file.originalname);

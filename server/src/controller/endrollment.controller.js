@@ -1,6 +1,6 @@
-const userModels = require('../models/user.models');
-const courseModels = require('../models/course.models');
-const enrollmentModels = require('../models/enrollment.models');
+const userModels = require('../model/user.model');
+const courseModels = require('../model/course.model');
+const enrollmentModels = require('../model/endrollment.model');
 const { ApiResponse } = require('../utlity/responseHandling');
 const ErrorHandling = require('../utlity/errorResponse');
 const { z } = require('zod');

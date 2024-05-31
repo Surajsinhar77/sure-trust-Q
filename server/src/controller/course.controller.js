@@ -1,9 +1,8 @@
-const userModels = require('../models/user.models');
-const courseModels = require('../models/course.models');
+const userModel = require('../model/user.model')
+const courseModels = require('../model/course.model');
 const { ApiResponse } = require('../utlity/responseHandling');
 const ErrorHandling = require('../utlity/errorResponse');
 const { z } = require('zod');
-
 
 const courseDetail = z.object({
     title: z.string().min(3, "Minmum length required 3"),

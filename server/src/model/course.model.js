@@ -30,4 +30,5 @@ courseSchema.pre('remove', async function(next) {
 });
 
 const Course = mongoose.model('Course', courseSchema);
-export default Course;
+
+module.exports = Course;

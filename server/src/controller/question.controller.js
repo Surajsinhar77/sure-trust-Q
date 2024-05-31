@@ -3,6 +3,7 @@ const userModel = require('../model/user.model');
 const {uploadOnCloudinary} = require('../utlity/uploadImageFunction');
 const {ApiResponse} = require('../utlity/responseHandling');
 const ErrorHandling = require('../utlity/errorResponse');
+const { z } = require('zod');
 // Create and Save a new Question
 
 const addQuestionVaild = z.object({

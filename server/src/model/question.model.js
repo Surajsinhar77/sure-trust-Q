@@ -52,4 +52,5 @@ questionSchema.pre('remove', async function(next) {
 
 
 const Question = mongoose.model('Question', questionSchema);
-export default Question;
+
+module.exports = Question;
