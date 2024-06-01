@@ -253,7 +253,6 @@ const refreshAccessToken = async (req, res) => {
 
 const getUser = async (req, res) => {
     try {
-        console.log("this is query ", req.query.id);
         const userId = z.string().min(24).parse(req.params.id) || req.query.id;
         const user = await userModel.findById(userId).select('-password -refreshToken');
         if(!user){
