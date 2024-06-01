@@ -1,13 +1,13 @@
 import { Link, useNavigate } from "react-router-dom";
 import { useState } from "react";
 import { Avatar, Button, Input, Typography } from "@mui/material";
-// import { useAuth } from "../common/AuthContext";
+import { useAuth } from "../common/AuthProvider";
 import { LoginUser } from "../common/AuthHandler/apiHandler";
 
 export default function LoginPage() {
   const navigate = useNavigate();
   const [userDeatil, setUserDetail] = useState('');
-  // const { login } = useAuth();
+  const { login } = useAuth();
   const [loading, setLoading] = useState(false);
 
   const onInputChange = (e) => {
@@ -16,7 +16,8 @@ export default function LoginPage() {
   }
 
   const handleLogin = async () => {
-    // const result = LoginUser(userDeatil, setLoading, navigate);
+    console.log("userDeatil", userDeatil);
+    const result = LoginUser(userDeatil, setLoading, navigate, login);
   };
 
   return (

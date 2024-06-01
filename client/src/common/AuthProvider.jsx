@@ -3,16 +3,12 @@ import { useContext, createContext, useState } from "react";
 const context = createContext();
 
 export default function AuthProvider({children}) {
-    // const [user, setUser] = useState( ()=>{
-    //     const user = localStorage.getItem("user");
-    //     return user ? JSON.parse(user) : null;
-    // })
-const [user, setUser] = useState(true)
+    const [user, setUser] = useState( ()=>{
+        const user = localStorage.getItem("user");
+        return user ? JSON.parse(user) : null;
+    })
+// const [user, setUser] = useState(false)
 
-    function register(user) {
-        localStorage.setItem("user", JSON.stringify(user));
-        setUser(user);
-    }
 
     function login(user) {
         localStorage.setItem("user", JSON.stringify(user));
@@ -29,8 +25,8 @@ const [user, setUser] = useState(true)
             value={{
                 user,
                 setUser,
-                // login,
-                // logout
+                login,
+                logout
             }}
         >
             {children}

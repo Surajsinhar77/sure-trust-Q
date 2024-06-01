@@ -1,8 +1,6 @@
 import { toast } from "react-toastify";
 import params from './params.json';
-// import { useAuth } from "../AuthProvider";
-
-// const { login, register } = useAuth();
+import axios from 'axios';
 
 const notify = (message, { type }) => {
     if (type) {
@@ -12,38 +10,43 @@ const notify = (message, { type }) => {
     toast.error(message);
 }
 
-export async function LoginUser(userDeatil, setLoading, navigate) { //userDeatil, setLoading
+export async function LoginUser(userDeatil, setLoading, navigate, login) { //userDeatil, setLoading
     try {
         setLoading(true);
-        if (!userDeatil.email || !userDeatil.password) {
+        const passwordRegEx = /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{6,20}$/;
+        if (!userDeatil.email || !passwordRegEx.test(userDeatil.password)) {
             if (!userDeatil.email) {
                 notify("Please enter the email", false);
-            } else if (!userDeatil.password) {
-                notify("Please enter the password", false);
+            } else if (!passwordRegEx.test(userDeatil.password)) {
+                notify("Password must contain at least one number and one uppercase and lowercase letter, and at least 6 or more characters", false);
             } else {
                 notify("Please fill all the fields", false);
             }
             setLoading(false);
             return;
         }
-        const response = await axios.post(`${params?.baseURL}/auth/login`, { email: userDeatil.email, password: userDeatil.password }, {
+        const response = await axios.post(`${params?.productionBaseAuthURL}/login`, { email: userDeatil.email, password: userDeatil.password }, {
             withCredentials: true,
             headers: {
                 'Content-Type': 'application/json',
                 'Authorization': 'Bearer ' + JSON.parse(localStorage.getItem('user'))?.token,
             }
         });
+
         if (response.status === 200) {
-            if (response?.data?.result) {
-                login(response.data.result);
-                notify(response.data.message, { type: true });
-                setLoading(false);
-                navigate('/');
-                return;
-            }
-            throw new Error(response.data.message);
+            console.log("This is the response api handler ", response);
+            // if (response?.data?.result) {
+            //     login(response.data.result);
+            //     notify(response.data.message, { type: true });
+            //     setLoading(false);
+            //     navigate('/');
+            //     return;
+            // }
+            // throw new Error(response.data.message);
         }
-        navigate('/login');
+        console.log("This is the response api handler ", response);
+
+        // navigate('/login');
         setLoading(false);
     } catch (err) {
         console.log("This is the main Error Here ", err);
@@ -56,7 +59,7 @@ export async function LoginUser(userDeatil, setLoading, navigate) { //userDeatil
 
 export async function RegisterUser(userDetail, setLoading, navigate) {
     setLoading(true);
-    console.log("RegisterUser",    userDetail)
+    console.log("RegisterUser", userDetail)
     try {
         if (!userDetail.Name || !userDetail.email || !userDetail.password || !selectedFile) {
             if (!userDetail.Name) {
