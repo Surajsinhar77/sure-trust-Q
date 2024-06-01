@@ -160,6 +160,7 @@ async function loginUser(req, res) {
         const options = {
             httpOnly: true,
             secure: true,
+            sameSite : 'none'
         }
 
         const userResult = await userModel.findById({ _id: userExist._id }).select('-password -refreshToken');
