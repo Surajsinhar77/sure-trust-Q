@@ -23,7 +23,8 @@ if (!fs.existsSync(UPLOADS_DIR)) {
 // Set up storage for uploaded files locally
 const localDiskStorage = multer.diskStorage({
     destination: (req, file, cb) => {
-        cb(null, UPLOADS_DIR);
+        console.log("file path is not provided")
+        cb(null, UPLOADS_DIR); 
     },
     filename: (req, file, cb) => {
         cb(null, Date.now() + '-' + file.originalname);
@@ -43,8 +44,6 @@ const upload = multer({
         cb(new Error('Only JPEG, JPG, and PNG files are allowed'));
     }
 }).single('file');
-
-
 
 
 const uploadOnCloudinary = async (localFilePath) => {

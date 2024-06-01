@@ -5,7 +5,7 @@ const {upload} = require('../utlity/uploadImageFunction');
 const verifyUser = require('../middleware/auth.middleware');
 const router = express.Router();
 
-router.route('/signup').post(upload,registerUser );
+router.route('/signup').post(upload , registerUser );
 router.route('/login').post(loginUser);
 router.route('/userById/:id').get(verifyUser ,getUser);
 router.route('/users').get(verifyUser ,getUsers);
