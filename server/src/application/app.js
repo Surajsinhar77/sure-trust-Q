@@ -9,19 +9,17 @@ const answerRoute = require('../routes/answer.route');
 const endrollmentRoute = require('../routes/endrollment.routes');
 const testRoute = require('../test/test.route');
 const verifyToken = require('../middleware/auth.middleware');
-const {upload, uploadOnCloudinary} = require('../utlity/uploadImageFunction')
 const cookiesParser = require('cookie-parser')
 require('dotenv').config();
 
 app.use(cookiesParser());
-
-app.use(cors(
-    {
-        origin: 'http://localhost:5173',
-        credentials: true,
-    }
-));
 app.use(express.json());
+
+const corsOptions = {
+    origin: 'http://localhost:5173', // Replace with your frontend domain
+    credentials: true // Allow credentials (cookies, authorization headers, etc.)
+};
+app.use(cors(corsOptions));
 
 app.get('/', async(_, res) => {
 
