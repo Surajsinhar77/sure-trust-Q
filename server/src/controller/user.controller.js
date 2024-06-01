@@ -140,18 +140,10 @@ async function loginUser(req, res) {
             throw new ErrorResponse(404, 'User is not found');
         }
 
-        // const isPasswordMatch = await bcrypt.compare(userData.password, userExist.password);
-        // const isPasswordMatch = userExist.isPasswordMatch(userData.password);
-        // if (!isPasswordMatch) {
-        //     res.clearCookie('accessToken');
-        //     throw new ErrorResponse(404, 'Password is not correct');
-        // }
 
         const isPasswordVaild = await userExist.isPasswordMatch(userData.password);
         console.log('isPasswordVaild ', isPasswordVaild);
         if (!isPasswordVaild) {
-            // res.clearCookie('accessToken');
-            // res.clearCookie('refreshToken');
             throw new ErrorResponse(404, 'Password is not correct');
         }
 

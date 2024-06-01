@@ -47,7 +47,8 @@ export async function LoginUser(userDeatil, setLoading, navigate, login) { //use
         // navigate('/login');
         setLoading(false);
     } catch (err) {
-        notify(err.message, { type: false });
+        const error = err.response?.data?.message || err.message;
+        notify(error, {type : false} );
         setLoading(false);
         navigate('/login');
     }
