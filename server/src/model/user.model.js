@@ -1,4 +1,5 @@
 const mongoose = require('mongoose');
+const bcrypt = require('bcrypt');
 const {genrateAccessToken, genrateRefreshToken} = require('../service/genrateToken.service');
 const role = ['admin', 'user' ,'teacher'];
 
@@ -16,6 +17,8 @@ const userSchema = new mongoose.Schema({
     email: {
         type: String,
         required: true,
+        unique: true,
+        lowercase: true,
         trim: true,
     },
 

@@ -5,8 +5,9 @@ const bcrypt = require('bcrypt');
 const FileSystem = require('fs');
 // const { genrateAccessToken, genrateRefreshToken } = require('../service/genrateToken.service');
 const ErrorResponse = require('../utlity/errorResponse');
-const {ApiResponse} = require('../utlity/responseHandling');
-const { upload, uploadOnCloudinary, deleteFromCloudinary} = require('../utlity/uploadImageFunction');
+const { ApiResponse } = require('../utlity/responseHandling');
+const { upload, uploadOnCloudinary, deleteFromCloudinary } = require('../utlity/uploadImageFunction');
+const { default: mongoose } = require('mongoose');
 
 
 
@@ -15,6 +16,8 @@ const generateAccessAndRefereshTokens = async (userId) => {
         const user = await userModel.findById(userId)
         const accessToken = user.genrateAccessTkn();
         const refreshToken = user.genrateRefToken();
+        // console.log('refreshToken', refreshToken)
+        // console.log('accessToken', accessToken)
 
         user.refreshToken = refreshToken
         await user.save({ validateBeforeSave: false })
@@ -27,7 +30,7 @@ const generateAccessAndRefereshTokens = async (userId) => {
 
 const userDataRegister = z.object({
     name: z.string().min(1, 'Name is required'),  // Name should be a non-empty string
-    email: z.string().email('Invalid email address'),  // Valid email format
+    email: z.string().email('Invalid email address').toLowerCase(),  // Valid email format
     password: z.string().regex(
         /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/,
         'Password must be at least 8 characters long and include at least one uppercase letter, one lowercase letter, one number, and one special character.'
@@ -54,7 +57,7 @@ async function registerUser(req, res) {
             throw new ErrorResponse(409, 'User already registered');
         }
 
-        const {public_id, image_url} = await uploadOnCloudinary(profileImageLocalAddress);
+        const { public_id, image_url } = await uploadOnCloudinary(profileImageLocalAddress);
         if (!image_url) {
             throw new ErrorResponse(404, 'Profile image is not uploaded');
         }
@@ -69,9 +72,9 @@ async function registerUser(req, res) {
                 role: userData.role,
                 profilePicture: image_url
             });
-            
+
             const result = await user.save();
-            
+
             if (!result) {
                 await deleteFromCloudinary(public_id);
                 throw new ErrorResponse(404, 'User is not created');
@@ -94,7 +97,7 @@ async function registerUser(req, res) {
                 profilePicture: image_url
             });
 
-            if(!user) {
+            if (!user) {
                 await deleteFromCloudinary(public_id);
                 throw new ErrorResponse(404, 'User is not created');
             }
@@ -118,7 +121,7 @@ async function registerUser(req, res) {
 
 
 const loginRequestSchema = z.object({
-    email: z.string().email('Invalid email address'),  // Valid email format
+    email: z.string().email('Invalid email address').toLowerCase(),  // Valid email format
     password: z.string().regex(
         /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/,
         'Password must be at least 8 characters long and include at least one uppercase letter, one lowercase letter, one number, and one special character.'
@@ -129,13 +132,15 @@ const loginRequestSchema = z.object({
 async function loginUser(req, res) {
     try {
         const userData = loginRequestSchema.parse(req.body);
-        const userExist = await userModel.findOne({ email: userData.email });
+        const userExist = await userModel.findOne(userData.email ? { email: userData.email } : { name: userData.name });
+
         if (!userExist) {
             res.clearCookie('accessToken');
             throw new ErrorResponse(404, 'User is not found');
         }
 
-        const isPasswordMatch = await bcrypt.compare(userData.password, userExist.password);
+        // const isPasswordMatch = await bcrypt.compare(userData.password, userExist.password);
+        const isPasswordMatch = userExist.isPasswordMatch(userData.password);
         if (!isPasswordMatch) {
             res.clearCookie('accessToken');
             throw new ErrorResponse(404, 'Password is not correct');
@@ -149,31 +154,29 @@ async function loginUser(req, res) {
         }
 
 
-        const { accessToken, refreshToken } = generateAccessAndRefereshTokens(userExist._id);
+        const { accessToken, refreshToken } = await generateAccessAndRefereshTokens(userExist._id);
 
         const options = {
             httpOnly: true,
             secure: true,
         }
 
-        const userResult = await userModel.findById({ _id: userExist._id }).select('-password', '-refreshToken');
+        const userResult = await userModel.findById({ _id: userExist._id }).select('-password -refreshToken');
 
         res.cookie("accessToken", accessToken, options);
         res.cookie("refreshToken", refreshToken, options);
-        res.setHeader('Authorization', `Bearer ${accessToken}`);
-        res.setHeader('Authorization', `Bearer ${refreshToken}`);
-        return new ApiResponse(200, userResult, "User is sucessfull Login").send(res);
+        res.setHeader('Authorization', `Bearer ${accessToken} refresh ${refreshToken}`);
+        return res.status(200).json(new ApiResponse(200, userResult, 'User is logged in'));
     } catch (err) {
         res.clearCookie('accessToken');
         return res.status(err.statusCode || 500).json(new ApiResponse(err.statusCode || 500, {}, err.message));
     }
 }
 
-
 const logoutUser = async (req, res) => {
     try {
         await userModel.findByIdAndUpdate(
-            req.user._id,
+            req.user?._id,
             {
                 $unset: {
                     refreshToken: 1 // this removes the field from document
@@ -229,46 +232,57 @@ const refreshAccessToken = async (req, res) => {
             secure: true
         }
 
-        const { accessToken, newRefreshToken } = await generateAccessAndRefereshTokens(user._id)
+        const accessToken = await user.genrateAccessTkn();
 
         return res
             .status(200)
             .cookie("accessToken", accessToken, options)
-            .cookie("refreshToken", newRefreshToken, options)
+            .cookie("refreshToken", incomingRefreshToken, options)
+            .setHeader('Authorization', `Bearer ${accessToken} refresh ${incomingRefreshToken}`)
             .json(
                 new ApiResponse(
                     200,
-                    { accessToken, refreshToken: newRefreshToken },
+                    { accessToken, refreshToken: incomingRefreshToken },
                     "Access token refreshed"
                 )
             )
     } catch (error) {
-        throw new ErrorResponse(401, error?.message || "Invalid refresh token")
+        return res.status(401).json(new ApiResponse(401, {}, error.message))
     }
 }
 
 const getUser = async (req, res) => {
     try {
-        const user = await userModel.findById(req.params.id).select('-password', '-refreshToken');
-        if (!user) {
+        console.log("this is query ", req.query.id);
+        const userId = z.string().min(24).parse(req.params.id) || req.query.id;
+        const user = await userModel.findById(userId).select('-password -refreshToken');
+        if(!user){
             throw new ErrorResponse(404, 'User is not found');
         }
-        return new ApiResponse(200, user, 'User is found').send(res);
+        
+        return res.status(200).json(new ApiResponse(200, user, 'User is found'));
     } catch (err) {
-        throw new ErrorResponse(404, err.message);
+        return res.status(err.statusCode || 500).json(new ApiResponse(err.statusCode || 500, {}, err.message));
     }
 }
 
 
 const getUsers = async (req, res) => {
     try {
-        const users = await userModel.find().select('-password', '-refreshToken');
+        const limit = parseInt(req.query.limit) || 10;
+        const page = parseInt(req.query.page) || 1;
+        const skip = (page - 1) * limit;
+
+        const users = await userModel.find().limit(limit).skip(skip).select('-password -refreshToken');
         if (!users) {
             throw new ErrorResponse(404, 'Users are not found');
         }
-        return new ApiResponse(200, users, 'Users are found').send(res);
+        const totalUsers = await userModel.countDocuments();
+        const totalPages = Math.ceil(totalUsers / limit);
+        const pagination = { totalUsers, totalPages, page, limit };
+        return res.status(200).json(new ApiResponse(200, { users, pagination }, 'All users are found'));
     } catch (err) {
-        throw new ErrorResponse(404, err.message);
+        return res.status(err.statusCode || 500).json(new ApiResponse(err.statusCode || 500, {}, err.message));
     }
 }
 

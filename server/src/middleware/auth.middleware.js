@@ -7,7 +7,7 @@ const options = {
     sameSite: 'none',
 };
 
-const secretkey = process.env.SECRET_KEY;
+const secretkey = process.env.ACCESS_TOKEN_SECRET;
 
 const verifyToken = (req, _, next) => {
     try{
