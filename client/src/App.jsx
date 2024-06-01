@@ -11,15 +11,14 @@ function App() {
   const { user, loading } = useAuth();
   return (
     <>
-      {
-        loading ? <Loader /> :
-          <>
-            {user ? <ResponsiveAppBar /> : ""}
-            <AllRoutes />
-            {user ? <Footer /> : ""}
-            <ToastContainer />
-          </>
-      }
+      {loading && <Loader /> }
+      <>
+        {user ? <ResponsiveAppBar /> : ""}
+        <AllRoutes />
+        {user ? <Footer /> : ""}
+        <ToastContainer />
+      </>
+
     </>
   )
 }
