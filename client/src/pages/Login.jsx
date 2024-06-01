@@ -3,6 +3,7 @@ import { useState } from "react";
 import { Avatar, Button, Input, Typography } from "@mui/material";
 import { useAuth } from "../common/AuthProvider";
 import { LoginUser } from "../common/AuthHandler/apiHandler";
+import Loadingbutton from '../components/Loadingbutton';
 
 export default function LoginPage() {
   const navigate = useNavigate();
@@ -55,15 +56,15 @@ export default function LoginPage() {
 
         </div>
         <div className="flex flex-col items-center justify-between gap-2">
-          <Button
+          <Loadingbutton
             // className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
-            type="button"
-            variant="contained"
+            isLoading={loading}
             onClick={handleLogin}
-          // loading={loading}
+            variant="contained"
+            color="primary"
           >
             Sign In
-          </Button>
+          </Loadingbutton>
           <Link
             className="inline-block align-baseline font-bold text-xs text-center text-gray-500 hover:text-blue-800"
             to="/register"

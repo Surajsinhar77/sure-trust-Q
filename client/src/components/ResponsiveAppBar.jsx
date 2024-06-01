@@ -40,6 +40,7 @@ function ResponsiveAppBar() {
   };
 
   const handleCloseUserMenu = () => {
+    
     setAnchorElUser(null);
   };
 
@@ -165,7 +166,7 @@ function ResponsiveAppBar() {
             >
               {settings.map((setting, index) => (
                 <Link key={index} to={`/${setting.toLowerCase()}`}>
-                  <MenuItem key={setting} onClick={handleCloseUserMenu}>
+                  <MenuItem key={setting} onClick={handleCloseUserMenu} >
                   <Typography textAlign="center">{setting}</Typography>
                 </MenuItem>
                 </Link>

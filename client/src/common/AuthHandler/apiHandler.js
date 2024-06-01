@@ -34,15 +34,15 @@ export async function LoginUser(userDeatil, setLoading, navigate, login) { //use
         });
 
         if (response.status === 200) {
-            console.log("This is the response api handler ", response);
-            // if (response?.data?.result) {
-            //     login(response.data.result);
-            //     notify(response.data.message, { type: true });
-            //     setLoading(false);
-            //     navigate('/');
-            //     return;
-            // }
-            // throw new Error(response.data.message);
+            console.log("This is the response api handler ", response?.headers);
+            if (response?.data?.data) {
+                login(response.data.data);
+                notify(response.data.message, { type: true });
+                setLoading(false);
+                navigate('/');
+                return;
+            }
+            throw new Error(response.data.message);
         }
         console.log("This is the response api handler ", response);
 
