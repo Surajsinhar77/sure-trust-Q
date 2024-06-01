@@ -169,7 +169,7 @@ async function loginUser(req, res) {
         res.cookie("accessToken", accessToken, options);
         res.cookie("refreshToken", refreshToken, options);
         res.setHeader('Authorization', `Bearer ${accessToken} refresh ${refreshToken}`);
-        return res.status(200).json(new ApiResponse(200, userResult, 'User is logged in'));
+        return res.status(200).json(new ApiResponse(200, {user : userResult, accessToken, refreshToken}, 'User is logged in'));
     } catch (err) {
         res.clearCookie('accessToken');
         return res.status(err.statusCode || 500).json(new ApiResponse(err.statusCode || 500, {}, err.message));
