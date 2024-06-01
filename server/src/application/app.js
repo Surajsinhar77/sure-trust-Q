@@ -23,7 +23,7 @@ app.use(cors(
 ));
 app.use(express.json());
 
-app.post('/', async(_, res) => {
+app.get('/', async(_, res) => {
 
     return res.send(`
         Welcome to the backend
