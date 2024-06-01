@@ -147,7 +147,7 @@ async function loginUser(req, res) {
         //     throw new ErrorResponse(404, 'Password is not correct');
         // }
 
-        const isPasswordVaild = userExist.isPasswordMatch(userData.password);
+        const isPasswordVaild = await userExist.isPasswordMatch(userData.password);
         console.log('isPasswordVaild ', isPasswordVaild);
         if (!isPasswordVaild) {
             // res.clearCookie('accessToken');
