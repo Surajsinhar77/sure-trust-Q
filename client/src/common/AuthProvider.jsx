@@ -7,7 +7,6 @@ export default function AuthProvider({children}) {
         const user = localStorage.getItem("user");
         return user ? JSON.parse(user) : null;
     })
-// const [user, setUser] = useState(false)
 
 
     function login(user) {

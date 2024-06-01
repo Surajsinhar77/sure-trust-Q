@@ -1,7 +1,7 @@
 const mongoose = require('mongoose');
 const bcrypt = require('bcrypt');
 const {genrateAccessToken, genrateRefreshToken} = require('../service/genrateToken.service');
-const role = ['admin', 'user' ,'teacher'];
+const role = ['admin', 'student' ,'teacher'];
 
 const userSchema = new mongoose.Schema({
     name: {
@@ -25,7 +25,7 @@ const userSchema = new mongoose.Schema({
     role: {
         type: String,
         enum: role,
-        default: 'user',
+        default: 'student',
     },
 
     isApproved: {

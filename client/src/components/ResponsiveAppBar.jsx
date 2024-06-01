@@ -14,6 +14,10 @@ import MenuItem from '@mui/material/MenuItem';
 import AdbIcon from '@mui/icons-material/Adb';
 import { Link } from 'react-router-dom';
 import { PiSealQuestionDuotone } from "react-icons/pi";
+import { useAuth } from '../common/AuthProvider';
+import { UserLogout } from '../common/AuthHandler/apiHandler';
+import { useNavigate } from 'react-router-dom';
+import LoadingButton from './Loadingbutton';
 
 const pages = [
   { name: 'Questions', link: 'my-questions' },
@@ -25,6 +29,8 @@ const pages = [
 const settings = ['Profile', 'Logout'];
 
 function ResponsiveAppBar() {
+  const {user, logout} = useAuth();
+  const navigate = useNavigate();
   const [anchorElNav, setAnchorElNav] = React.useState(null);
   const [anchorElUser, setAnchorElUser] = React.useState(null);
 
@@ -43,6 +49,11 @@ function ResponsiveAppBar() {
     
     setAnchorElUser(null);
   };
+
+  const UserlogoutHandler = async() => {
+    await UserLogout(navigate,logout);
+    handleCloseUserMenu();
+  }
 
   return (
     <AppBar position="static" className='mb-5'>
@@ -143,9 +154,9 @@ function ResponsiveAppBar() {
           </Box>
 
           <Box sx={{ flexGrow: 0 }}>
-            <Tooltip title="Open settings">
+            <Tooltip title={user?.user?.name}>
               <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
-                <Avatar alt="Remy Sharp" src="/static/images/avatar/2.jpg" />
+                <Avatar alt="Remy Sharp" src={user?.user?.profilePicture} />
               </IconButton>
             </Tooltip>
             <Menu
@@ -164,13 +175,20 @@ function ResponsiveAppBar() {
               open={Boolean(anchorElUser)}
               onClose={handleCloseUserMenu}
             >
-              {settings.map((setting, index) => (
-                <Link key={index} to={`/${setting.toLowerCase()}`}>
-                  <MenuItem key={setting} onClick={handleCloseUserMenu} >
-                  <Typography textAlign="center">{setting}</Typography>
+              {/* {settings.map((setting, index) => ( */}
+                
+                <Link to={`/${settings[0].toLowerCase()}`}>
+                  <MenuItem key={settings[0]} onClick={handleCloseUserMenu} >
+                  <Typography textAlign="center">{settings[0]}</Typography>
                 </MenuItem>
                 </Link>
-              ))}
+
+                <Link>
+                  <MenuItem onClick={UserlogoutHandler} >
+                    <Typography textAlign="center">Logout</Typography>
+                  </MenuItem>
+                </Link>
+              {/* ))} */}
             </Menu>
           </Box>
         </Toolbar>

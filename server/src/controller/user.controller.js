@@ -133,7 +133,7 @@ const loginRequestSchema = z.object({
 async function loginUser(req, res) {
     try {
         const userData = loginRequestSchema.parse(req.body);
-        const userExist = await userModel.findOne(userData.email ? { email: userData.email } : { name: userData.name });
+        const userExist = await userModel.findOne({ email: userData.email } || { name: userData.email });
 
         if (!userExist) {
             res.clearCookie('accessToken');
@@ -141,19 +141,19 @@ async function loginUser(req, res) {
         }
 
         // const isPasswordMatch = await bcrypt.compare(userData.password, userExist.password);
-        const isPasswordMatch = userExist.isPasswordMatch(userData.password);
-        if (!isPasswordMatch) {
-            res.clearCookie('accessToken');
-            throw new ErrorResponse(404, 'Password is not correct');
-        }
+        // const isPasswordMatch = userExist.isPasswordMatch(userData.password);
+        // if (!isPasswordMatch) {
+        //     res.clearCookie('accessToken');
+        //     throw new ErrorResponse(404, 'Password is not correct');
+        // }
 
         const isPasswordVaild = userExist.isPasswordMatch(userData.password);
-
+        console.log('isPasswordVaild ', isPasswordVaild);
         if (!isPasswordVaild) {
-            res.clearCookie('accessToken');
+            // res.clearCookie('accessToken');
+            // res.clearCookie('refreshToken');
             throw new ErrorResponse(404, 'Password is not correct');
         }
-
 
         const { accessToken, refreshToken } = await generateAccessAndRefereshTokens(userExist._id);
 

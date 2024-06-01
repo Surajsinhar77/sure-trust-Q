@@ -34,7 +34,7 @@ export default function AllRoutes() {
           <>
             <Route path="/login" element={<Login />} />
             <Route path="/register" element={<Register />} />
-            <Route path="*" element={< NotFound/>} />
+            <Route path="*" element={<Login/>} />
           </>
       }
 

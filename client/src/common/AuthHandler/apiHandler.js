@@ -29,12 +29,11 @@ export async function LoginUser(userDeatil, setLoading, navigate, login) { //use
             withCredentials: true,
             headers: {
                 'Content-Type': 'application/json',
-                'Authorization': 'Bearer ' + JSON.parse(localStorage.getItem('user'))?.token,
+                'Authorization': 'Bearer ' + JSON.parse(localStorage.getItem('user'))?.user?.accessToken,
             }
         });
 
         if (response.status === 200) {
-            console.log("This is the response api handler ", response?.headers);
             if (response?.data?.data) {
                 login(response.data.data);
                 notify(response.data.message, { type: true });
@@ -44,22 +43,19 @@ export async function LoginUser(userDeatil, setLoading, navigate, login) { //use
             }
             throw new Error(response.data.message);
         }
-        console.log("This is the response api handler ", response);
 
         // navigate('/login');
         setLoading(false);
     } catch (err) {
-        console.log("This is the main Error Here ", err);
         notify(err.message, { type: false });
-        navigate('/login');
         setLoading(false);
+        navigate('/login');
     }
 }
 
 
 export async function RegisterUser(userDetail, setLoading, navigate) {
     setLoading(true);
-    console.log("RegisterUser", userDetail)
     try {
         if (!userDetail.Name || !userDetail.email || !userDetail.password || !selectedFile) {
             if (!userDetail.Name) {
@@ -94,4 +90,27 @@ export async function RegisterUser(userDetail, setLoading, navigate) {
         toast.error(error.message);
     }
     setLoading(false);
+}
+
+
+export const UserLogout = async (navigate, logoutContextApi) => {
+    try {
+        const response = await axios.get(`${params?.productionBaseAuthURL}/logout`, {
+            withCredentials: true,
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': 'Bearer '+JSON.parse(localStorage.getItem('user'))?.accessToken,
+            }
+        });
+        if (response.status === 200) {
+            logoutContextApi();
+            toast.success("Logged out successfully", true);
+            navigate('/login');
+            return;
+        }
+        throw new Error("Something went wrong");
+    }
+    catch (error) {
+        toast.error(error.message , false);
+    }
 }

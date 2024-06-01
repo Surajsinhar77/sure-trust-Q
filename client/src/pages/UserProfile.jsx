@@ -1,16 +1,20 @@
 import { Box, Typography, Badge, Divider } from "@mui/material";
 import ProfileTabs from "../components/ProfileTabs";
+import {useAuth} from '../common/AuthProvider';
 
 export default function UserProfile() {
+    const {user} = useAuth().user;
+
+
     return (
         <Box className="w-[60%] m-auto text-gray-700 py-7">
             <Box className='flex justify-between'>
                 <Box className="profile-Picture flex gap-4 items-center">
                     <Box className="profileImage rounded-full">
                         <img
-                            src="/Img/profile.jpg"
+                            src={user?.profilePicture}
                             alt='profile-picture'
-                            className="rounded-full w-32"
+                            className="rounded-full w-32 object-cover h-32"
                         />
                     </Box>
                     <Box className="name-email">
@@ -19,7 +23,7 @@ export default function UserProfile() {
                                 variant="h5"
                                 fontWeight={550}
                                 fontSize={27}
-                            >Suraj Kumar</Typography>
+                            >{user?.name}</Typography>
                         </Box>
                         <Box className="emailOfPerson flex gap-3 items-center">
                             <Badge
@@ -31,13 +35,13 @@ export default function UserProfile() {
                                     text-blue-600
                                     
                                     ">
-                                Student
+                                {user?.role}
                             </Badge>
                             <Typography
                                 variant="p"
                                 className="text-gray-500"
                             >
-                                suraj@123gmail.com
+                                {user?.email}
                             </Typography>
                         </Box>
                     </Box>

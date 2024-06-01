@@ -17,7 +17,6 @@ export default function LoginPage() {
   }
 
   const handleLogin = async () => {
-    console.log("userDeatil", userDeatil);
     const result = LoginUser(userDeatil, setLoading, navigate, login);
   };
 
@@ -32,7 +31,7 @@ export default function LoginPage() {
           <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="email">
             Email
             <Input
-              className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+              className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-500 leading-tight focus:outline-none focus:shadow-outline"
               id="email"
               type="email"
               label="Email"
@@ -45,7 +44,8 @@ export default function LoginPage() {
           <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="password">
             Password
             <Input
-              className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 mb-3 leading-tight focus:outline-none focus:shadow-outline"
+              className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-500 mb-3 leading-tight focus:outline-none focus:shadow-outline"
+              color="primary"
               id="password"
               type="password"
               label="Password"
