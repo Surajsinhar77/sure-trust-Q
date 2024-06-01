@@ -8,6 +8,7 @@ export default function AuthProvider({children}) {
         return user ? JSON.parse(user) : null;
     })
 
+    const [loading, setLoading] = useState(false);
 
     function login(user) {
         localStorage.setItem("user", JSON.stringify(user));
@@ -19,13 +20,20 @@ export default function AuthProvider({children}) {
         setUser(null);
     }   
 
+    function setLoding(value){
+        setLoading(value);
+        return;
+    }
+
     return (
         <context.Provider
             value={{
                 user,
                 setUser,
                 login,
-                logout
+                logout,
+                setLoding,
+                loading
             }}
         >
             {children}

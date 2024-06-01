@@ -29,7 +29,7 @@ const pages = [
 const settings = ['Profile', 'Logout'];
 
 function ResponsiveAppBar() {
-  const {user, logout} = useAuth();
+  const {user, logout, setLoding} = useAuth();
   const navigate = useNavigate();
   const [anchorElNav, setAnchorElNav] = React.useState(null);
   const [anchorElUser, setAnchorElUser] = React.useState(null);
@@ -51,8 +51,10 @@ function ResponsiveAppBar() {
   };
 
   const UserlogoutHandler = async() => {
+    setLoding(true);
     await UserLogout(navigate,logout);
     handleCloseUserMenu();
+    setLoding(false);
   }
 
   return (

@@ -17,7 +17,6 @@ export default function AllRoutes() {
 
   return (
     <Routes>
-
       {
         user ?
           <>
@@ -34,10 +33,9 @@ export default function AllRoutes() {
           <>
             <Route path="/login" element={<Login />} />
             <Route path="/register" element={<Register />} />
-            <Route path="*" element={<Login/>} />
+            <Route path="*" element={<Login />} />
           </>
       }
-
     </Routes>
   );
 }
