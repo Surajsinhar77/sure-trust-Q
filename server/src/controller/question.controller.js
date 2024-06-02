@@ -8,10 +8,10 @@ const { z } = require('zod');
 
 const addQuestionVaild = z.object({
     courseId: z.string().nonempty(), 
-    title: z.string().nonempty(),   //
-    text: z.string().nonempty(),    //
-    codeSnippet: z.string(),        //
-    tags: z.string(),              //
+    title: z.string().nonempty(),   
+    text: z.string().nonempty(),    
+    codeSnippet: z.string(),        
+    tags: z.string(),              
     batchId: z.string().nonempty(), 
 });
 

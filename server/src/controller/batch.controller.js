@@ -1,5 +1,4 @@
 const userModels = require('../model/user.model');
-const courseModels = require('../model/course.model');
 const batchModels = require('../model/batch.model');
 const { ApiResponse } = require('../utlity/responseHandling');
 const ErrorHandling = require('../utlity/errorResponse');
@@ -16,27 +15,27 @@ const addBatch = async (req, res) => {
         const courseId = z.string().parse(req.params.id);
         const userRole = req.user.role;
         if (userRole !== 'admin') {
-            return new ErrorHandling(403, null, 'You are not allowed to add batch');
+            return new ErrorHandling(403, 'You are not allowed to add batch');
         }
 
         const batchDetails = req.body;
         const batchDetailVaild = batchDetail.parse(batchDetails);
 
-        const teacher = await userModels.findById(batchDetailVaild.userId);
-        if(!teacher.role === 'teacher') {
-            return new ErrorHandling(404, null, 'Teacher not found');
+        const user = await userModels.findById(batchDetailVaild.userId);
+        if(!user.role === 'teacher') {
+            return new ErrorHandling(404, 'Teacher not found');
         }
 
         const batch = new batchModels({
             batchName: batchDetailVaild.batchName,
             courseId: courseId,
-            userId: teacher._id,
-        });
+            userId: user._id,
+        }).populate('userId');
 
         await batch.save();
-        return new ApiResponse(200, batch, 'Batch added successfully').send(res);
+        return res.status(201).json(new ApiResponse(200, batch, 'Batch added successfully'));
     } catch (err) {
-        return new ErrorHandling(500, null, err.message);
+        return res.status(500).json(new ApiResponse(500, {} , err.message));
     }
 }
 
@@ -49,7 +48,7 @@ const getBatch = async (req, res) => {
         const batches = await batchModels.find();
         return new ApiResponse(200, batches, 'Batches fetched successfully').send(res);
     } catch (err) {
-        return new ErrorHandling(500, null, err.message);
+        return new ErrorHandling(500, err.message);
     }
 }
 
@@ -63,7 +62,7 @@ const getBatchById = async (req, res) => {
         const batch = await batchModels.findById(batchId);
         return new ApiResponse(200, batch, 'Batch fetched successfully').send(res);
     } catch (err) {
-        return new ErrorHandling(500, null, err.message);
+        return new ErrorHandling(500, err.message);
     }
 }
 
@@ -78,7 +77,7 @@ const updateBatch = async (req, res) => {
         const batch = await batchModels.findByIdAndUpdate(batchId, batchDetails, { new: true });
         return new ApiResponse(200, batch, 'Batch updated successfully').send(res);
     } catch (err) {
-        return new ErrorHandling(500, null, err.message);
+        return new ErrorHandling(500, err.message);
     }
 }
 
@@ -93,7 +92,7 @@ const deleteBatch = async (req, res) => {
         const batch = await batchModels.findByIdAndDelete(batchId);
         return new ApiResponse(200, batch, 'Batch deleted successfully').send(res);
     } catch (err) {
-        return new ErrorHandling(500, null, err.message);
+        return new ErrorHandling(500, err.message);
     }
 }
 
