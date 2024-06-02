@@ -36,22 +36,22 @@ const addEnrollment = async (req, res) => {
             { path: 'userId' },
             { path: 'batchId'}
         ]);
-        return new ApiResponse(200, enrollment, 'Enrollment added successfully').send(res);
+        return res.status(201).json(new ApiResponse(200, enrollmentInfo, 'Enrollment added successfully'));
     } catch (err) {
-        return new ErrorHandling(500, null, err.message);
+        return res.status(500).json(new ErrorHandling(500, {}, err.message));
     }
 }
 
 const getEnrollment = async (req, res) => {
     try {
         const userRole = req.user.role;
-        if (userRole !== 'admin') {
+        if (userRole !== 'admin' && userRole !== 'teacher') {
             return new ErrorHandling(403, 'You are not allowed to get enrollment');
         }
         const enrollments = await enrollmentModels.find();
-        return new ApiResponse(200, enrollments, 'Enrollments fetched successfully').send(res);
+        return res.status(200).json(new ApiResponse(200, enrollments, 'Enrollments fetched successfully'));
     } catch (err) {
-        return new ErrorHandling(500, null, err.message);
+        return res.status(500).json(new ErrorHandling(500, {}, err.message));
     }
 }
 
@@ -64,9 +64,9 @@ const getEnrollmentById = async (req, res) => {
         const enrollmentId = z.string().parse(req.params.id);
 
         const enrollment = await enrollmentModels.findById(enrollmentId);
-        return new ApiResponse(200, enrollment, 'Enrollment fetched successfully').send(res);
+        return res.status(200).json(new ApiResponse(200, enrollment, 'Enrollment fetched successfully'));
     } catch (err) {
-        return new ErrorHandling(500, null, err.message);
+        return res.status(500).json(new ErrorHandling(500, {}, err.message));
     }
 }
 
@@ -89,9 +89,9 @@ const updateEnrollment = async (req, res) => {
         enrollment.batchId = enrollmentDetailVaild.batchId;
 
         await enrollment.save();
-        return new ApiResponse(200, enrollment, 'Enrollment updated successfully').send(res);
+        return res.status(200).json(new ApiResponse(200, enrollment, 'Enrollment updated successfully'));
     } catch (err) {
-        return new ErrorHandling(500, null, err.message);
+        return res.status(500).json(new ErrorHandling(500, {}, err.message));
     }
 }
 
@@ -109,10 +109,10 @@ const deleteEnrollment = async (req, res) => {
             return new ErrorHandling(404, null, 'Enrollment not found');
         }
 
-        await enrollment.delete();
-        return new ApiResponse(200, null, 'Enrollment deleted successfully').send(res);
+        const result = await enrollment.delete();
+        return res.status(200).json(new ApiResponse(200, result, 'Enrollment deleted successfully'));
     } catch (err) {
-        return new ErrorHandling(500, null, err.message);
+        return res.status(500).json(new ErrorHandling(500, {}, err.message));
     }
 }
 

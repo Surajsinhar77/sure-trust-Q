@@ -2,6 +2,7 @@ import React from 'react';
 import Button from '@mui/material/Button';
 import CircularProgress from '@mui/material/CircularProgress';
 import Box from '@mui/material/Box';
+// import { InfinitySpin } from 'react-loader-spinner';
 
 function LoadingButton({ isLoading, onClick, children, ...props }) {
     return (
@@ -25,6 +26,12 @@ function LoadingButton({ isLoading, onClick, children, ...props }) {
                         marginLeft: '-12px',
                     }}
                 />
+                // <InfinitySpin
+                //     visible={true}
+                //     width="100"
+                //     color="#1565c0"
+                //     ariaLabel="infinity-spin-loading"
+                // />
             )}
             <Box
                 sx={{
