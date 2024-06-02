@@ -31,6 +31,11 @@ const addEnrollment = async (req, res) => {
         });
 
         await enrollment.save();
+        const enrollmentInfo = await enrollmentModels.findById(enrollment._id).populate([
+            { path: 'courseId' },
+            { path: 'userId' },
+            { path: 'batchId'}
+        ]);
         return new ApiResponse(200, enrollment, 'Enrollment added successfully').send(res);
     } catch (err) {
         return new ErrorHandling(500, null, err.message);
