@@ -4,6 +4,7 @@ const {uploadOnCloudinary} = require('../utlity/uploadImageFunction');
 const {ApiResponse} = require('../utlity/responseHandling');
 const ErrorHandling = require('../utlity/errorResponse');
 const { z } = require('zod');
+const e = require('express');
 // Create and Save a new Question
 
 const addQuestionVaild = z.object({
@@ -49,9 +50,9 @@ async function addQuestion(req, res){
             images: images,
             batchId: questionDetailVaild.batchId,
         });
-        return new ApiResponse(201, question, 'Question added successfully' ).send(res);
+        return res.status(201).json(new ApiResponse(201, question, 'Question added successfully' ));
     }catch(err){
-        return new ErrorHandling(500, null, err.message);
+        return res.status(500).json(new ErrorHandling(500, err.message , [err], err.stack));
     }
 }
 

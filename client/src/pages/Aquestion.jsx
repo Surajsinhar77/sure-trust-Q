@@ -87,8 +87,8 @@ function AskQuestion() {
                             />
                         </label>
 
-                        <label htmlFor="ask-tags"><
-                            h4>Tags</h4>
+                        <label htmlFor="ask-tags">
+                            <h4>Tags</h4>
                             <p>Add up to 5 tags to describe what your question is about</p>
                             <CodeUI value={code} onChange={setCode} />
                         </label>

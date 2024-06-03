@@ -299,7 +299,6 @@ const userDataRegisterForUpdate = z.object({
         /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/,
         'Password must be at least 8 characters long and include at least one uppercase letter, one lowercase letter, one number, and one special character.'
     ),
-    role: z.string().optional()
 }).refine(data => Object.keys(data).length > 0, {
     message: 'At least one field is required'
 });

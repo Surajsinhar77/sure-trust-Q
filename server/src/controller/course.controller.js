@@ -8,7 +8,7 @@ const courseDetail = z.object({
     title: z.string().min(3, "Minmum length required 3"),
     description: z.string().min(5, "Minmum length required 5"),
     tags: z.array(z.string()),
-    batches: z.array(z.string()),
+    batches: z.array(z.string()).optional(),
 })
 
 const addCourse = async (req, res) => {

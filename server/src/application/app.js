@@ -9,7 +9,7 @@ const answerRoute = require('../routes/answer.route');
 const endrollmentRoute = require('../routes/endrollment.routes');
 const testRoute = require('../test/test.route');
 const verifyToken = require('../middleware/auth.middleware');
-const cookiesParser = require('cookie-parser')
+const cookiesParser = require('cookie-parser');
 require('dotenv').config();
 
 app.use(cookiesParser());
@@ -41,6 +41,6 @@ app.use('/api/v1/batch', verifyToken, batchRoute);
 app.use('/api/v1/question', verifyToken, questionRoute);
 app.use('/api/v1/answer', verifyToken, answerRoute);
 app.use('/api/v1/enrollment', verifyToken, endrollmentRoute);
-app.use('/api/v1/test', testRoute);
+app.use('/api/v1/test',verifyToken, testRoute);
 
 module.exports = app;
