@@ -46,9 +46,8 @@ export default function Example(){
   };
   
   // Save button function 
-  function handleSave(e) {
+  function handleSave(e){
   }
-
 
 
   // handle submit function
