@@ -47,7 +47,7 @@ async function registerUser(req, res) {
         const isUserExist = await userModel.findOne({ email: userData.email });
 
         const profileImageLocalAddress = req?.file?.path;
-        console.log('profileImageLocalAddress', profileImageLocalAddress);
+        console.log('profileImageLocalAddress', req.file);
 
         if (!profileImageLocalAddress) {
             throw new ErrorResponse(404, 'Profile image is required');

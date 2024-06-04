@@ -55,8 +55,9 @@ export async function LoginUser(userDeatil, setLoading, navigate, login) { //use
 }
 
 
-export async function RegisterUser(userDetail, setLoading, navigate) {
+export async function RegisterUser(userDetail, setLoading, navigate, selectedFile) {
     setLoading(true);
+    console.log("image is here ",selectedFile);
     try {
         if (!userDetail.Name || !userDetail.email || !userDetail.password || !selectedFile) {
             if (!userDetail.Name) {
@@ -68,7 +69,7 @@ export async function RegisterUser(userDetail, setLoading, navigate) {
             } else if (!selectedFile) {
                 notify("Please select the profile picture", false);
             } else {
-                notify("Please fill all the fields", false);
+            notify("Please fill all the fields", false);
             }
             setLoading(false);
             return;
@@ -80,10 +81,17 @@ export async function RegisterUser(userDetail, setLoading, navigate) {
         newform.append('password', userDetail.password);
         newform.append('file', selectedFile);
 
-        const response = await register(newform)
-        if (response) {
-            login(response);
-            navigate('/');
+        const response = await axios.post(`${params?.productionBaseAuthURL}/signup`, newform, {
+            withCredentials: true,
+            headers: {
+                'Content-Type': 'application/json',
+                "Authorization": "Bearer " + JSON.parse(localStorage.getItem('user'))?.accessToken,
+            }
+        });
+        console.log("User register response : ", response);
+        if (response.status === 200) {
+            notify(response.data.message, { type: true });
+            navigate('/login');
         }
         setLoading(false);
         return;

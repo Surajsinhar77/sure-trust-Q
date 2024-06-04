@@ -5,7 +5,7 @@ import CodeUI from '../components/CodeUI';
 import FileUploaderCard from '../components/FileUploaderCard';
 
 function AskQuestion({onClose}) {
-
+    const [images, setSelectedFile] = useState([]);
     const [code, setCode] = React.useState('');
     
     function pleaseWrite() {
@@ -34,7 +34,7 @@ function AskQuestion({onClose}) {
                         <label htmlFor="ask-ques-body">
                             <h4>Uplode Images of Soultion</h4>
                             <p>Include all the Images</p>
-                            <FileUploaderCard />
+                            <FileUploaderCard images={images} selectedFile={setSelectedFile} />
                         </label>
 
                         <label htmlFor="code-snippet">

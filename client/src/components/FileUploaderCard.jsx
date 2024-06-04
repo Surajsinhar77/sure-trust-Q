@@ -38,7 +38,7 @@ const FileUploaderCard = ({ images, selectedFile }) => {
       >
         <input {...getInputProps()} />
         {
-          images.length > 0 ?
+          images?.length > 0 ?
             <>
               <div className='flex items-center justify-center p-2 gap-3'>
                 {images.map((file, index) => (

@@ -22,7 +22,7 @@ const style = {
   };
 
 export default function RegisterPage() {
-    const [selectedFile, setSelectedFile] = useState(null);
+    const [images, setSelectedFile] = useState([]);
     const [userDetail, SetUserDetail] = useState('');
     // const { login } = useAuth();
     const [open, setOpen] = useState(false);
@@ -44,8 +44,7 @@ export default function RegisterPage() {
 
     const handleRegister = async () => {
         // Handle registration logic here
-        console.log("handleRegister");
-        RegisterUser(userDetail, setLoading, navigate);
+        RegisterUser(userDetail, setLoading, navigate, images[0]);
     };
 
     return (
@@ -57,15 +56,15 @@ export default function RegisterPage() {
                         {/* <Avatar src="https://docs.material-tailwind.com/img/face-2.jpg" alt="avatar" /> */}
                         <Model
                             name="Upload Image"
-                            src="https://docs.material-tailwind.com/img/face-2.jpg"
+                            src={images.length > 0 ? images[0].preview : "https://docs.material-tailwind.com/img/face-2.jpg"}
                             style={style}
                         >
                             <FileUploaderCard
-                                isOpen={open}
-                                onClose={OnClose}
-                                onOpen={OnOpen}
-                                selectedFile={selectedFile}
-                                setSelectedFile={setSelectedFile}
+                                // isOpen={open}
+                                // onClose={OnClose}
+                                // onOpen={OnOpen}
+                                images={images}
+                                selectedFile={setSelectedFile}
                             />
                         </Model>
                     </div>

@@ -1,13 +1,12 @@
 import { useState } from "react";
 import Model from "../components/Model";
 import ProfilePicUploader from "../components/ProfilePicUploader";
-import FileUploaderCard from "../components/FileUploaderCard";
+// import FileUploaderCard from "../components/FileUploaderCard";
 
 export default function Test() {
     const [open, setOpen] = useState(false);
     const onOpen = () => setOpen(true);
     const onClose = () => setOpen(false);
-    const [selectedFile, setSelectedFile] = useState(null);
 
     return (
         <div>
@@ -21,10 +20,10 @@ export default function Test() {
             setSelectedFile={setSelectedFile} 
         /> */}
 
-        <FileUploaderCard />
+        {/* <FileUploaderCard />
         <Model>
             <FileUploaderCard />
-        </Model>
+        </Model> */}
         </div>
     );
 }

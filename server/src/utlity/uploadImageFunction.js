@@ -23,7 +23,7 @@ if (!fs.existsSync(UPLOADS_DIR)) {
 // Set up storage for uploaded files locally
 const localDiskStorage = multer.diskStorage({
     destination: (req, file, cb) => {
-        console.log("file path is not provided")
+        console.log("file path is not provided", file)
         cb(null, UPLOADS_DIR); 
     },
     filename: (req, file, cb) => {
@@ -35,6 +35,7 @@ const localDiskStorage = multer.diskStorage({
 const upload = multer({
     storage: localDiskStorage,
     fileFilter: (req, file, cb) => {
+        console.log("file path is not provided", file)
         const allowedFileTypes = /jpeg|jpg|png/;
         const mimetype = allowedFileTypes.test(file.mimetype);
         const extname = allowedFileTypes.test(path.extname(file.originalname).toLowerCase());
