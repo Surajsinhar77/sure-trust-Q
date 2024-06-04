@@ -123,3 +123,27 @@ export const UserLogout = async (navigate, logoutContextApi) => {
         toast.error(error.message , false);
     }
 }
+
+export const refreshAccessToken = async (setLoading, setAccessToken) => {
+    try {
+        setLoading(true);
+        const response = await axios.get(`${params?.productionBaseAuthURL}/refresh`, {
+            withCredentials: true,
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': 'Bearer ' + JSON.parse(localStorage.getItem('user'))?.accessToken,
+            }
+        });
+        
+        if (response.status === 200) {
+            setAccessToken(response.data.accessToken);
+            setLoading(false);
+            return;
+        }
+        throw new Error("Something went wrong");
+    }
+    catch (error) {
+        setLoading(false);
+        toast.error(error.message, false);
+    }
+}
