@@ -1,4 +1,5 @@
 const userModels = require('../model/user.model');
+const endrollModel = require('../model/endrollment.model');
 const courseModel = require('../model/course.model');
 const batchModel = require('../model/batch.model');
 const { ApiResponse } = require('../utlity/responseHandling');
@@ -48,6 +49,10 @@ const addBatch = async (req, res) => {
         
         // Only add userId if it is present
         if (req?.params?.id || users) {
+            const user = await endrollModel.findByIdAndUpdate(users, {
+                $set: { allowed: true }
+            });
+            if (!user) throw new ErrorHandling(404, 'User not found');
             batchDetails.userId = req?.params?.id || users;
         }
         

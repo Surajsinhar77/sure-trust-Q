@@ -1,4 +1,5 @@
 const userModel = require('../model/user.model');
+const endrollmentModel = require('../model/endrollment.model');
 const z = require('zod');
 const jwt = require('jsonwebtoken');
 const bcrypt = require('bcrypt');
@@ -111,8 +112,18 @@ async function registerUser(req, res) {
                 throw new ErrorResponse(404, 'User is not created');
             }
 
+            const userEnrollment = await endrollmentModel.create({
+                userId: userCreated._id,
+            });
+
+            if (!userEnrollment) {
+                await userModel.findByIdAndDelete(user._id);
+                await deleteFromCloudinary(public_id);
+                throw new ErrorResponse(404, 'User is not created');
+            }
+
             return res.status(200).json(
-                new ApiResponse(201, userCreated, 'User is created successfully')
+                new ApiResponse(201, {userCreated, userEnrollment}, 'User is created successfully')
             );
         }
     } catch (err) {
