@@ -7,19 +7,18 @@ const { z } = require('zod');
 const courseDetail = z.object({
     title: z.string().min(3, "Minmum length required 3"),
     description: z.string().min(5, "Minmum length required 5"),
-    tags: z.array(z.string()),
+    tags: z.array(z.string()).optional(),
     batches: z.array(z.string()).optional(),
 })
 
 const addCourse = async (req, res) => {
     try {
+        const courseDetails = req.body;
+        const courseDetailVaild = courseDetail.parse(courseDetails);
         const userRole = req.user.role;
         if (userRole !== 'admin') {
             return new ErrorHandling(403, null, 'You are not allowed to add course');
         }
-
-        const courseDetails = req.body;
-        const courseDetailVaild = courseDetail.parse(courseDetails);
 
         const course = new courseModels({
             title: courseDetailVaild.title,
@@ -29,9 +28,9 @@ const addCourse = async (req, res) => {
         });
 
         await course.save();
-        return new ApiResponse(200, course, 'Course added successfully').send(res);
+        return res.status(201).json(new ApiResponse(201, course, 'Course added successfully'));
     } catch (err) {
-        return new ErrorHandling(500, null, err.message);
+        return res.status(500).json(new ApiResponse(500, {}, err.message));
     }
 }
 

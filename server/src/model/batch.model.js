@@ -14,9 +14,20 @@ const batchSchema = new mongoose.Schema({
         required: true,
     },
 
-    userId: {
+    TeacherId: {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'User',
+        default: 'Not assigned',
+    },
+
+    userId: {
+        type: [mongoose.Schema.Types.ObjectId],
+        ref: 'User',
+        default: [],
+    },
+
+    startDate: {
+        type: String,
         required: true,
     },
     

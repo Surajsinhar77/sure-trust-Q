@@ -1,45 +1,71 @@
 const userModels = require('../model/user.model');
+const courseModel = require('../model/course.model');
 const batchModel = require('../model/batch.model');
 const { ApiResponse } = require('../utlity/responseHandling');
 const ErrorHandling = require('../utlity/errorResponse');
-const { z } = require('zod');
+const { z, array } = require('zod');
 
 
 const batchDetail = z.object({
-    batchName: z.string().nonempty(),
-    TeacherId: z.string().min(16),
+    batchName: z.string().min(3).max(20),
+    TeacherId: z.string().min(24).optional(),
+    courseId: z.string().nonempty(),
+    userId: array(z.string().nonempty()).optional(),
+    startDate: z.string().nonempty(),
 });
 
 const addBatch = async (req, res) => {
     try {
-        const courseId = z.string().parse(req.params.id);
+
+        async function getCourseId() {
+            let id = req?.params?.id;
+            if (req?.params?.id) {
+                id = z.string().parse(req?.params?.id);
+            }
+            return id;
+        }
+        const users = await getCourseId();
+        const batchDetailVaild = batchDetail.parse(req.body);
+
+        const batchExist = await batchModel.findOne({ batchName: batchDetailVaild.batchName });
+
+        if (batchExist) {
+            console.log('Batch already exists');
+            throw new ErrorHandling(409, 'Batch already exists');
+        }
+
         const userRole = req.user.role;
         if (userRole !== 'admin') {
-            return new ErrorHandling(403, 'You are not allowed to add batch');
+            throw new ErrorHandling(403, 'You are not allowed to add batch');
         }
 
-        const batchDetails = req.body;
-        const batchDetailVaild = batchDetail.parse(batchDetails);
-
-        const user = await userModels.findById(batchDetailVaild.TeacherId);
-        if(!user.role === 'teacher') {
-            return new ErrorHandling(404, 'Teacher not found');
-        }
-
-        const batch = await new batchModel({
+        const batchDetails = {
             batchName: batchDetailVaild.batchName,
-            courseId: courseId,
-            userId: user._id,
-        }).save();
+            courseId: batchDetailVaild.courseId || courseId,
+            TeacherId: batchDetailVaild?.TeacherId,
+            startDate: batchDetailVaild.startDate,
+        };
+        
+        // Only add userId if it is present
+        if (req?.params?.id || users) {
+            batchDetails.userId = req?.params?.id || users;
+        }
+        
+        const batch = await batchModel.create(batchDetails);
 
-        // await batch.save();
+        const updateCourse = await courseModel.findByIdAndUpdate(batchDetailVaild.courseId, {
+            $push: { batches: batch._id }
+        });
+        
+        if(!updateCourse) throw new ErrorHandling(404, 'Course not found');
+        
         const batchInfo = await batchModel.findById(batch._id).populate([
             { path: 'courseId' },
-            { path: 'userId' },
+            { path: 'TeacherId' }
         ]);
         return res.status(201).json(new ApiResponse(200, batchInfo, 'Batch added successfully'));
     } catch (err) {
-        return res.status(500).json(new ApiResponse(500, {} , err.message));
+        return res.status(500).json(new ApiResponse(500, {}, err.message));
     }
 }
 
@@ -55,7 +81,7 @@ const getBatch = async (req, res) => {
         ]);
         return res.status(200).json(new ApiResponse(200, batches, 'Batches fetched successfully'));
     } catch (err) {
-        return res.status(500).json(new ApiResponse(500, {} , err.message));
+        return res.status(500).json(new ApiResponse(500, {}, err.message));
     }
 }
 
@@ -69,7 +95,7 @@ const getBatchById = async (req, res) => {
         const batch = await batchModel.findById(batchId);
         return res.ststus(200).json(new ApiResponse(200, batch, 'Batch fetched successfully'));
     } catch (err) {
-        return res.status(500).json(new ApiResponse(500, {} , err.message));
+        return res.status(500).json(new ApiResponse(500, {}, err.message));
     }
 }
 
@@ -91,15 +117,15 @@ const updateBatch = async (req, res) => {
         const batchDetails = batchDetailForUpdate.parse(req?.body);
 
         const batch = await batchModel.findByIdAndUpdate(batchId, batchDetails, { new: true }).populate([
-            { path: 'courseId'},
-            { path: 'userId'},
+            { path: 'courseId' },
+            { path: 'userId' },
         ]);
 
-        if(!batch) return new ErrorHandling(404, 'Batch not found');
+        if (!batch) return new ErrorHandling(404, 'Batch not found');
 
         return res.status(200).json(new ApiResponse(200, batch, 'Batch updated successfully'));
     } catch (err) {
-        return res.status(500).json(new ApiResponse(500, {} , err.message));
+        return res.status(500).json(new ApiResponse(500, {}, err.message));
     }
 }
 
@@ -114,7 +140,7 @@ const deleteBatch = async (req, res) => {
         const batch = await batchModel.findByIdAndDelete(batchId);
         return res.status(200).json(new ApiResponse(200, batch, 'Batch deleted successfully'));
     } catch (err) {
-        return res.status(500).json(new ApiResponse(500, {} , err.message));
+        return res.status(500).json(new ApiResponse(500, {}, err.message));
     }
 }
 
