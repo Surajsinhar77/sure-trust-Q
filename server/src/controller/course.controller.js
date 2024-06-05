@@ -41,9 +41,9 @@ const getCourse = async (req, res) => {
             return new ErrorHandling(403, null, 'You are not allowed to get course');
         }
         const courses = await courseModels.find();
-        return new ApiResponse(200, courses, 'Courses fetched successfully').send(res);
+        return res.status(200).json(new ApiResponse(200, courses, 'Courses fetched successfully'));
     } catch (err) {
-        return new ErrorHandling(500, null, err.message);
+        return res.status(500).json(new ApiResponse(500, {}, err.message));
     }
 }
 

@@ -43,4 +43,8 @@ app.use('/api/v1/answer', verifyToken, answerRoute);
 app.use('/api/v1/enrollment', verifyToken, endrollmentRoute);
 app.use('/api/v1/test',verifyToken, testRoute);
 
+app.options('*', (req, res) => 
+    res.send('CORS enabled for all routes')
+);
+
 module.exports = app;
