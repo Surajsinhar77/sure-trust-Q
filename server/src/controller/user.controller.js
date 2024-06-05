@@ -211,7 +211,8 @@ const logoutUser = async (req, res) => {
 
 const refreshAccessToken = async (req, res) => {
     const incomingRefreshToken = req.cookies.refreshToken || req.body.refreshToken
-
+    console.log('incomingRefreshToken -----> ', incomingRefreshToken)
+    
     if (!incomingRefreshToken) {
         throw new ErrorResponse(401, "unauthorized request")
     }
