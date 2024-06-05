@@ -75,8 +75,6 @@ async function registerUser(req, res) {
                 profilePicture: image_url
             });
 
-            const result = await user.save();
-
             if (!result) {
                 await deleteFromCloudinary(public_id);
                 throw new ErrorResponse(404, 'User is not created');
@@ -88,6 +86,9 @@ async function registerUser(req, res) {
                 await deleteFromCloudinary(public_id);
                 throw new ErrorResponse(404, 'User is not created');
             }
+
+            const result = await user.save();
+
             return res.status(200).json(
                 new ApiResponse(201, userCreated, 'User is created successfully')
             );
@@ -107,16 +108,6 @@ async function registerUser(req, res) {
             const userCreated = await userModel.findById(user._id).select('-password -refreshToken');
 
             if (!userCreated) {
-                await userModel.findByIdAndDelete(user._id);
-                await deleteFromCloudinary(public_id);
-                throw new ErrorResponse(404, 'User is not created');
-            }
-
-            const userEnrollment = await endrollmentModel.create({
-                userId: userCreated._id,
-            });
-
-            if (!userEnrollment) {
                 await userModel.findByIdAndDelete(user._id);
                 await deleteFromCloudinary(public_id);
                 throw new ErrorResponse(404, 'User is not created');
