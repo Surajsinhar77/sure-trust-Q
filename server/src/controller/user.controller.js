@@ -114,7 +114,7 @@ async function registerUser(req, res) {
             }
 
             return res.status(200).json(
-                new ApiResponse(201, { userCreated, userEnrollment }, 'User is created successfully')
+                new ApiResponse(201, { userCreated }, 'User is created successfully')
             );
         }
     } catch (err) {
