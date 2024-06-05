@@ -10,14 +10,14 @@ const notify = (message, { type }) => {
     toast.error(message);
 }
 
-export async function LoginUser(userDeatil, setLoading, navigate, login) { //userDeatil, setLoading
+export async function LoginUser(userDetail, setLoading, navigate, login, setAccessToken, setRefreshToken) { //userDetail, setLoading
     try {
         setLoading(true);
         const passwordRegEx = /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{6,20}$/;
-        if (!userDeatil.email || !passwordRegEx.test(userDeatil.password)) {
-            if (!userDeatil.email) {
+        if (!userDetail.email || !passwordRegEx.test(userDetail.password)) {
+            if (!userDetail.email) {
                 notify("Please enter the email", false);
-            } else if (!passwordRegEx.test(userDeatil.password)) {
+            } else if (!passwordRegEx.test(userDetail.password)) {
                 notify("Password must contain at least one number and one uppercase and lowercase letter, and at least 6 or more characters", false);
             } else {
                 notify("Please fill all the fields", false);
@@ -25,7 +25,7 @@ export async function LoginUser(userDeatil, setLoading, navigate, login) { //use
             setLoading(false);
             return;
         }
-        const response = await axios.post(`${params?.productionBaseAuthURL}/login`, { email: userDeatil.email, password: userDeatil.password }, {
+        const response = await axios.post(`${params?.productionBaseAuthURL}/login`, { email: userDetail.email, password: userDetail.password }, {
             withCredentials: true,
             headers: {
                 'Content-Type': 'application/json',
@@ -36,6 +36,8 @@ export async function LoginUser(userDeatil, setLoading, navigate, login) { //use
         if (response.status === 200) {
             if (response?.data?.data) {
                 login(response.data.data);
+                setAccessToken(response.data.accessToken);
+                setRefreshToken(response.data.refreshToken);
                 notify(response.data.message, { type: true });
                 setLoading(false);
                 navigate('/');
@@ -48,7 +50,7 @@ export async function LoginUser(userDeatil, setLoading, navigate, login) { //use
         setLoading(false);
     } catch (err) {
         const error = err.response?.data?.message || err.message;
-        notify(error, {type : false} );
+        notify(error, { type: false });
         setLoading(false);
         navigate('/login');
     }
@@ -57,7 +59,7 @@ export async function LoginUser(userDeatil, setLoading, navigate, login) { //use
 
 export async function RegisterUser(userDetail, setLoading, navigate, selectedFile) {
     setLoading(true);
-    console.log("image is here ",selectedFile);
+    console.log("image is here ", selectedFile);
     try {
         if (!userDetail.Name || !userDetail.email || !userDetail.password || !selectedFile) {
             if (!userDetail.Name) {
@@ -69,7 +71,7 @@ export async function RegisterUser(userDetail, setLoading, navigate, selectedFil
             } else if (!selectedFile) {
                 notify("Please select the profile picture", false);
             } else {
-            notify("Please fill all the fields", false);
+                notify("Please fill all the fields", false);
             }
             setLoading(false);
             return;
@@ -108,7 +110,7 @@ export const UserLogout = async (navigate, logoutContextApi) => {
             withCredentials: true,
             headers: {
                 'Content-Type': 'application/json',
-                'Authorization': 'Bearer '+JSON.parse(localStorage.getItem('user'))?.accessToken,
+                'Authorization': 'Bearer ' + JSON.parse(localStorage.getItem('user'))?.accessToken,
             }
         });
         if (response.status === 200) {
@@ -120,33 +122,64 @@ export const UserLogout = async (navigate, logoutContextApi) => {
         throw new Error("Something went wrong");
     }
     catch (error) {
-        toast.error(error.message , false);
+        toast.error(error.message, false);
     }
 }
 
-export const refreshAccessToken = async (setLoading, setAccessToken) => {
+// const refreshAccessToken = async () => {
+//     // console.log("refresh token is here ---------------------------->");
+//     // return null;
+//     try {
+//         const response = await axios.get(`${params?.productionBaseAuthURL}/refreshAccessToken`, {
+//             withCredentials: true,
+//             headers: {
+//                 'Content-Type': 'application/json',
+//                 'Authorization': 'Bearer ' + JSON.parse(localStorage.getItem('user'))?.accessToken,
+//             }
+//         });
+
+//         console.log("response from refresh token -------------------->?", response);
+//         if (response.status === 200) {
+//             localStorage.setItem('accessToken', JSON.stringify(response.data.accessToken));
+//             return response.data.accessToken;
+//         }
+//         throw new Error("Something went wrong");
+//     }
+//     catch (error) {
+//         setLoading(false);
+//         toast.error(error.message, false);
+//         return null;
+//     }
+// }
+
+async function refreshAccessToken(params) {
     try {
-        setLoading(true);
-        const response = await axios.get(`${params?.productionBaseAuthURL}/refresh`, {
+        console.log("refresh token is here ---------------------------->", `${params?.productionBaseAuthURL}/refreshAccessToken`);
+        const response = await axios.get(`${params?.productionBaseAuthURL}/refreshAccessToken`, {
             withCredentials: true,
             headers: {
                 'Content-Type': 'application/json',
                 'Authorization': 'Bearer ' + JSON.parse(localStorage.getItem('user'))?.accessToken,
             }
         });
-        
+
+        console.log("response from refresh token -------------------->?", response);
+
         if (response.status === 200) {
-            setAccessToken(response.data.accessToken);
-            setLoading(false);
-            return;
+            const newToken = response.data.accessToken;
+            localStorage.setItem('user', JSON.stringify({ ...JSON.parse(localStorage.getItem('user')), accessToken: newToken }));
+            return newToken;
+        } else {
+            throw new Error("Failed to refresh token");
         }
-        throw new Error("Something went wrong");
-    }
-    catch (error) {
-        setLoading(false);
-        toast.error(error.message, false);
+    } catch (error) {
+        console.error('Token refresh failed:', error.message);
+        // Handle the error appropriately, e.g., redirecting to login
+        // toast.error(error.message, false); // Ensure toast is properly integrated in your application
+        return null;
     }
 }
+
 
 function isTokenExpired(token) {
     const decodedToken = JSON.parse(atob(token.split('.')[1]));
@@ -154,23 +187,59 @@ function isTokenExpired(token) {
     return decodedToken.exp < currentTime;
 }
 
+
+let isRefreshing = false;
+let failedQueue = [];
+
+const processQueue = (error, token = null) => {
+    failedQueue.forEach(prom => {
+        if (error) {
+            prom.reject(error);
+        } else {
+            prom.resolve(token);
+        }
+    });
+
+    failedQueue = [];
+};
+
 axios.interceptors.request.use(
     async (config) => {
-        let token = JSON.Promise(localStorage.getItem('user'))?.accessToken;
+        let token = JSON.parse(localStorage.getItem('user'))?.accessToken;
+
         if (token && isTokenExpired(token)) {
-            try {
-                token = await refreshAccessToken();
-            } catch (error) {
-                // Handle token refresh failure (e.g., redirect to login)
-                console.error('Token refresh failed', error);
-                throw error;
+            console.log('Token expired');
+            if (!isRefreshing) {
+                isRefreshing = true;
+                try {
+                    const newToken = await refreshAccessToken(params);
+                    localStorage.setItem('user', JSON.stringify({ ...JSON.parse(localStorage.getItem('user')), accessToken: newToken }));
+                    processQueue(null, newToken);
+                    config.headers['Authorization'] = `Bearer ${newToken}`;
+                } catch (error) {
+                    processQueue(error, null);
+                    throw error;
+                } finally {
+                    isRefreshing = false;
+                }
+            } else {
+                return new Promise((resolve, reject) => {
+                    failedQueue.push({ resolve, reject });
+                }).then(token => {
+                    config.headers['Authorization'] = `Bearer ${token}`;
+                    return config;
+                }).catch(error => {
+                    return Promise.reject(error);
+                });
             }
+        } else {
+            config.headers['Authorization'] = `Bearer ${token}`;
         }
-        config.headers['Authorization'] = `Bearer ${token}`;
         return config;
     },
     (error) => {
         return Promise.reject(error);
     }
 );
+
 

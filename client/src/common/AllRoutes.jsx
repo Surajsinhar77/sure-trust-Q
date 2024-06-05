@@ -7,7 +7,7 @@ import AboutUs from "../pages/AboutUs";
 import MyQuestion from "../pages/MyQuestion";
 import Allanswer from "../pages/Allanswer";
 import Test from "../pages/Test";
-import NotFound from '../pages/NotFound';
+// import NotFound from '../pages/NotFound';
 import { useAuth } from "../common/AuthProvider";
 import UserProfile from "../pages/UserProfile";
 

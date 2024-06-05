@@ -123,7 +123,7 @@ async function registerUser(req, res) {
             }
 
             return res.status(200).json(
-                new ApiResponse(201, {userCreated, userEnrollment}, 'User is created successfully')
+                new ApiResponse(201, { userCreated, userEnrollment }, 'User is created successfully')
             );
         }
     } catch (err) {
@@ -163,8 +163,8 @@ async function loginUser(req, res) {
         const options = {
             httpOnly: true,
             secure: true,
-            sameSite : 'none',
-            path : "/"
+            sameSite: 'none',
+            path: "/"
         }
 
         const userResult = await userModel.findById({ _id: userExist._id }).select('-password -refreshToken');
@@ -172,7 +172,7 @@ async function loginUser(req, res) {
         res.cookie("accessToken", accessToken, options);
         res.cookie("refreshToken", refreshToken, options);
         res.setHeader('Authorization', `Bearer ${accessToken} refresh ${refreshToken}`);
-        return res.status(200).json(new ApiResponse(200, {user : userResult, accessToken, refreshToken}, 'User is logged in'));
+        return res.status(200).json(new ApiResponse(200, { user: userResult, accessToken, refreshToken }, 'User is logged in'));
     } catch (err) {
         res.clearCookie('accessToken');
         return res.status(err.statusCode || 500).json(new ApiResponse(err.statusCode || 500, {}, err.message));
@@ -210,14 +210,12 @@ const logoutUser = async (req, res) => {
 }
 
 const refreshAccessToken = async (req, res) => {
-    const incomingRefreshToken = req.cookies.refreshToken || req.body.refreshToken
-    console.log('incomingRefreshToken -----> ', incomingRefreshToken)
-    
-    if (!incomingRefreshToken) {
-        throw new ErrorResponse(401, "unauthorized request")
-    }
-
     try {
+        const incomingRefreshToken = req.cookies.refreshToken;
+
+        if (!incomingRefreshToken) {
+            throw new ErrorResponse(401, "unauthorized request")
+        }
         const decodedToken = jwt.verify(
             incomingRefreshToken,
             process.env.REFRESH_TOKEN_SECRET
@@ -262,10 +260,10 @@ const getUser = async (req, res) => {
     try {
         const userId = z.string().min(24).parse(req.params.id) || req.query.id;
         const user = await userModel.findById(userId).select('-password -refreshToken');
-        if(!user){
+        if (!user) {
             throw new ErrorResponse(404, 'User is not found');
         }
-        
+
         return res.status(200).json(new ApiResponse(200, user, 'User is found'));
     } catch (err) {
         return res.status(err.statusCode || 500).json(new ApiResponse(err.statusCode || 500, {}, err.message));

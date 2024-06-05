@@ -1,6 +1,7 @@
 const jwt = require('jsonwebtoken');
 const ErrorHandling = require('../utlity/errorResponse');
 const { ApiResponse } = require('../utlity/responseHandling');
+
 const options = {
     httpOnly: true,
     secure: true,

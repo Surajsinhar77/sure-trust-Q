@@ -8,6 +8,16 @@ export default function AuthProvider({children}) {
         return user ? JSON.parse(user) : null;
     })
 
+    const [accessToken, setAccessToken] = useState( ()=>{
+        const accessToken = localStorage.getItem("accessToken");
+        return accessToken ? JSON.parse(accessToken) : null;
+    })
+
+    const [refreshToken, setRefreshToken] = useState( ()=>{
+        const refreshToken = localStorage.getItem("refreshToken");
+        return refreshToken ? JSON.parse(refreshToken) : null;
+    })
+
     const [loading, setLoading] = useState(false);
 
     function login(user) {
@@ -25,6 +35,18 @@ export default function AuthProvider({children}) {
         return;
     }
 
+    // function setAccessTokenFunction(value){
+    //     localStorage.setItem("accessToken", JSON.stringify(value));
+    //     setAccessToken(value);
+    //     return;
+    // }
+
+    // function setRefreshTokenfunction(value){
+    //     localStorage.setItem("refreshToken", JSON.stringify(value));
+    //     setRefreshToken(value);
+    //     return;
+    // }
+
     return (
         <context.Provider
             value={{
@@ -33,7 +55,11 @@ export default function AuthProvider({children}) {
                 login,
                 logout,
                 setLoding,
-                loading
+                loading,
+                accessToken,
+                setAccessToken,
+                refreshToken,
+                setRefreshToken
             }}
         >
             {children}
