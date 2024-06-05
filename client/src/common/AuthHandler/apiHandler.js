@@ -147,3 +147,30 @@ export const refreshAccessToken = async (setLoading, setAccessToken) => {
         toast.error(error.message, false);
     }
 }
+
+function isTokenExpired(token) {
+    const decodedToken = JSON.parse(atob(token.split('.')[1]));
+    const currentTime = Math.floor(Date.now() / 1000);
+    return decodedToken.exp < currentTime;
+}
+
+axios.interceptors.request.use(
+    async (config) => {
+        let token = JSON.Promise(localStorage.getItem('user'))?.accessToken;
+        if (token && isTokenExpired(token)) {
+            try {
+                token = await refreshAccessToken();
+            } catch (error) {
+                // Handle token refresh failure (e.g., redirect to login)
+                console.error('Token refresh failed', error);
+                throw error;
+            }
+        }
+        config.headers['Authorization'] = `Bearer ${token}`;
+        return config;
+    },
+    (error) => {
+        return Promise.reject(error);
+    }
+);
+
