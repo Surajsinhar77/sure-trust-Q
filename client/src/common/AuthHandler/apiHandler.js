@@ -100,7 +100,7 @@ export async function LoginUser(userDetail, setLoading, navigate, login, setAcce
 
 export async function RegisterUser(userDetail, setLoading, navigate, selectedFile) {
     setLoading(true);
-    console.log("image is here ", selectedFile);
+    console.log("image is here  this ", selectedFile);
     try {
         if (!userDetail.Name || !userDetail.email || !userDetail.password || !selectedFile) {
             if (!userDetail.Name) {
@@ -119,7 +119,7 @@ export async function RegisterUser(userDetail, setLoading, navigate, selectedFil
         }
 
         const newform = new FormData();
-        newform.append('name', userDetail.name);
+        newform.append('name', userDetail.Name);
         newform.append('email', userDetail.email);
         newform.append('password', userDetail.password);
         newform.append('file', selectedFile);
@@ -127,24 +127,22 @@ export async function RegisterUser(userDetail, setLoading, navigate, selectedFil
         const response = await axios.post(`${params?.productionBaseAuthURL}/signup`, newform, {
             withCredentials: true,
             headers: {
-                'Content-Type': 'application/json',
+                'Content-Type': 'multipart/form-data',
                 "Authorization": "Bearer " + JSON.parse(localStorage.getItem('accessToken')),
             }
         });
-        console.log("User register response : ", response);
         if (response.status === 200) {
             notify(response.data.message, { type: true });
             navigate('/login');
+            setLoading(false);
+            return;
         }
-        setLoading(false);
-        return;
+        throw new Error(response.data.message);
     } catch (error) {
-        toast.error(error.message);
+        toast.error(error.response?.data?.message , false);
+        setLoading(false)
     }
-    setLoading(false);
 }
-
-
 
 export const UserLogout = async (navigate, logoutContextApi) => {
     try {

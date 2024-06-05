@@ -15,10 +15,9 @@ const FileUploaderCard = ({ images, selectedFile }) => {
   const [messageInfo, setMessageInfo] = React.useState({ type: '', message: '' });
 
   const onDrop = (acceptedFiles) => {
-    const array = acceptedFiles.map((file) => Object.assign(file, {
-      preview: URL.createObjectURL(file),
-    }));
-    selectedFile(array)
+    images.push(...acceptedFiles)
+    selectedFile(acceptedFiles);
+    const message = `${acceptedFiles.length} file(s) uploaded successfully.`;
   };
 
   const { getRootProps, getInputProps } = useDropzone({ onDrop });
@@ -42,7 +41,7 @@ const FileUploaderCard = ({ images, selectedFile }) => {
             <>
               <div className='flex items-center justify-center p-2 gap-3'>
                 {images.map((file, index) => (
-                  <img key={index} src={file.preview} alt={file.name} className="w-32 h-32 object-cover rounded-md" />
+                  <img key={index} src={URL.createObjectURL(images[0])} alt={file?.name} className="w-32 h-32 object-cover rounded-md" />
                 ))
                 }
               </div>

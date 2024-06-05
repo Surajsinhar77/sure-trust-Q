@@ -6,6 +6,7 @@ import { useNavigate } from "react-router-dom";
 import FileUploaderCard from "../components/FileUploaderCard";
 import Model from "../components/Model";
 import { RegisterUser } from "../common/AuthHandler/apiHandler";
+import LoadingButton from "../components/Loadingbutton";
 
 
 const style = {
@@ -19,10 +20,10 @@ const style = {
     border: '1px solid #000',
     boxShadow: 24,
     p: 4,
-  };
+};
 
 export default function RegisterPage() {
-    const [images, setSelectedFile] = useState([]);
+    let [images, setSelectedFile] = useState([]);
     const [userDetail, SetUserDetail] = useState('');
     // const { login } = useAuth();
     const [open, setOpen] = useState(false);
@@ -33,7 +34,7 @@ export default function RegisterPage() {
         const { name, value } = e.target;
         SetUserDetail({ ...userDetail, [name]: value });
     }
-    
+
     function OnClose() {
         setOpen(false);
     }
@@ -56,7 +57,7 @@ export default function RegisterPage() {
                         {/* <Avatar src="https://docs.material-tailwind.com/img/face-2.jpg" alt="avatar" /> */}
                         <Model
                             name="Upload Image"
-                            src={images.length > 0 ? images[0].preview : "https://docs.material-tailwind.com/img/face-2.jpg"}
+                            src={images?.length > 0 ? images?.length && URL?.createObjectURL(images[0]) : "https://docs.material-tailwind.com/img/face-2.jpg"}
                             style={style}
                         >
                             <FileUploaderCard
@@ -113,15 +114,25 @@ export default function RegisterPage() {
                     </label>
                 </div>
                 <div className="flex flex-col gap-2 items-center justify-between">
-                    <Button
+                    {/* <Button
                         className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
                         type="button"
                         variant="contained"
                         onClick={handleRegister}
-                    // loading={loading}
+                        isLoading={loading}
                     >
                         Register
-                    </Button>
+                    </Button> */}
+
+                    <LoadingButton
+                        // className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
+                        isLoading={loading}
+                        onClick={handleRegister}
+                        variant="contained"
+                        color="primary"
+                    >
+                        Register
+                    </LoadingButton>
                     <Link
                         className="inline-block align-baseline font-bold text-xm text-center text-blue-500 hover:text-blue-800"
                         to="/login"
