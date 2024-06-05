@@ -2,12 +2,55 @@ import { toast } from "react-toastify";
 import params from './params.json';
 import axios from 'axios';
 
+
+// function to notify user
 const notify = (message, { type }) => {
     if (type) {
         toast.success(message);
         return;
     }
     toast.error(message);
+}
+
+
+// function to check if token is expired
+function isTokenExpired(token) {
+    const decodedToken = JSON.parse(atob(token.split('.')[1]));
+    const currentTime = Math.floor(Date.now() / 1000);
+    return decodedToken.exp < currentTime;
+}
+
+
+// function call before every api call to check if token is expired
+export const checkingTokenExpiry = async () => {
+    try{
+        
+        const token = JSON.parse(localStorage.getItem('accessToken'));
+        if (isTokenExpired(token)){
+            const response = await axios.get(`${params?.productionBaseAuthURL}/refreshAccessToken`, {
+                withCredentials: true,
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': 'Bearer ' + JSON.parse(localStorage.getItem('accessToken')),
+                }
+            });
+
+            if (response.status === 200) {
+                localStorage.setItem('accessToken', JSON.stringify(response?.data?.data?.accessToken));
+                localStorage.setItem('refreshToken', JSON.stringify(response?.data?.data?.refreshToken));
+                console.log("Token refreshed successfully");
+                return response?.data?.data?.accessToken;
+            } else {
+                navigate('/login');
+                toast.error("Token expired, please login again", false);
+                throw new Error("Token expired, please login again");
+            }
+        }
+    } catch (error) {
+        // toast.error(error.message, false);
+        console.log("Error in checkingTokenExpiry : ", error);
+        return null;
+    }
 }
 
 export async function LoginUser(userDetail, setLoading, navigate, login, setAccessToken, setRefreshToken) { //userDetail, setLoading
@@ -29,15 +72,15 @@ export async function LoginUser(userDetail, setLoading, navigate, login, setAcce
             withCredentials: true,
             headers: {
                 'Content-Type': 'application/json',
-                'Authorization': 'Bearer ' + JSON.parse(localStorage.getItem('user'))?.user?.accessToken,
+                'Authorization': 'Bearer ' + JSON.parse(localStorage.getItem('accessToken')),
             }
         });
 
         if (response.status === 200) {
             if (response?.data?.data) {
                 login(response.data.data);
-                setAccessToken(response.data.accessToken);
-                setRefreshToken(response.data.refreshToken);
+                setAccessToken(response?.data?.data?.accessToken);
+                setRefreshToken(response.data?.data?.refreshToken);
                 notify(response.data.message, { type: true });
                 setLoading(false);
                 navigate('/');
@@ -45,8 +88,6 @@ export async function LoginUser(userDetail, setLoading, navigate, login, setAcce
             }
             throw new Error(response.data.message);
         }
-
-        // navigate('/login');
         setLoading(false);
     } catch (err) {
         const error = err.response?.data?.message || err.message;
@@ -87,7 +128,7 @@ export async function RegisterUser(userDetail, setLoading, navigate, selectedFil
             withCredentials: true,
             headers: {
                 'Content-Type': 'application/json',
-                "Authorization": "Bearer " + JSON.parse(localStorage.getItem('user'))?.accessToken,
+                "Authorization": "Bearer " + JSON.parse(localStorage.getItem('accessToken')),
             }
         });
         console.log("User register response : ", response);
@@ -104,13 +145,16 @@ export async function RegisterUser(userDetail, setLoading, navigate, selectedFil
 }
 
 
+
 export const UserLogout = async (navigate, logoutContextApi) => {
     try {
+        const newToken = await checkingTokenExpiry();
+
         const response = await axios.get(`${params?.productionBaseAuthURL}/logout`, {
             withCredentials: true,
             headers: {
                 'Content-Type': 'application/json',
-                'Authorization': 'Bearer ' + JSON.parse(localStorage.getItem('user'))?.accessToken,
+                'Authorization': 'Bearer ' + newToken,
             }
         });
         if (response.status === 200) {
@@ -127,23 +171,31 @@ export const UserLogout = async (navigate, logoutContextApi) => {
 }
 
 // const refreshAccessToken = async () => {
-//     // console.log("refresh token is here ---------------------------->");
-//     // return null;
 //     try {
-//         const response = await axios.get(`${params?.productionBaseAuthURL}/refreshAccessToken`, {
-//             withCredentials: true,
-//             headers: {
-//                 'Content-Type': 'application/json',
-//                 'Authorization': 'Bearer ' + JSON.parse(localStorage.getItem('user'))?.accessToken,
-//             }
-//         });
+//         if (isTokenExpired(JSON.parse(localStorage.getItem('user'))?.accessToken)) {
+//             console.log('Token expired --------------------> 1');
+//             // this request will  not execute after we reach here
+//             const response = await axios.get(`${params?.productionBaseAuthURL}/refreshAccessToken`, {
+//                 withCredentials: true,
+//                 headers: {
+//                     'Content-Type': 'application/json',
+//                     'Authorization': 'Bearer ' + JSON.parse(localStorage.getItem('accessToken')),
+//                 }
+//             });
 
-//         console.log("response from refresh token -------------------->?", response);
-//         if (response.status === 200) {
-//             localStorage.setItem('accessToken', JSON.stringify(response.data.accessToken));
-//             return response.data.accessToken;
+//             if (response.status === 200) {
+//                 localStorage.setItem('accessToken', JSON.stringify(response?.data?.data?.accessToken));
+//                 localStorage.setItem('refreshToken', JSON.stringify(response?.data?.data?.refreshToken));
+//                 console.log("Token refreshed successfully");
+//                 return response?.data?.data?.accessToken;
+//             } else {
+//                 // navigate('/login');
+//                 toast.error("Token expired, please login again", false);
+//                 throw new Error("Token expired, please login again");
+//             }
 //         }
-//         throw new Error("Something went wrong");
+//         console.log('Token expired --------------------> 2');
+//         return JSON.parse(localStorage.getItem('accessToken'));
 //     }
 //     catch (error) {
 //         setLoading(false);
@@ -151,95 +203,4 @@ export const UserLogout = async (navigate, logoutContextApi) => {
 //         return null;
 //     }
 // }
-
-async function refreshAccessToken(params) {
-    try {
-        console.log("refresh token is here ---------------------------->", `${params?.productionBaseAuthURL}/refreshAccessToken`);
-        const response = await axios.get(`${params?.productionBaseAuthURL}/refreshAccessToken`, {
-            withCredentials: true,
-            headers: {
-                'Content-Type': 'application/json',
-                'Authorization': 'Bearer ' + JSON.parse(localStorage.getItem('user'))?.accessToken,
-            }
-        });
-
-        console.log("response from refresh token -------------------->?", response);
-
-        if (response.status === 200) {
-            const newToken = response.data.accessToken;
-            localStorage.setItem('user', JSON.stringify({ ...JSON.parse(localStorage.getItem('user')), accessToken: newToken }));
-            return newToken;
-        } else {
-            throw new Error("Failed to refresh token");
-        }
-    } catch (error) {
-        console.error('Token refresh failed:', error.message);
-        // Handle the error appropriately, e.g., redirecting to login
-        // toast.error(error.message, false); // Ensure toast is properly integrated in your application
-        return null;
-    }
-}
-
-
-function isTokenExpired(token) {
-    const decodedToken = JSON.parse(atob(token.split('.')[1]));
-    const currentTime = Math.floor(Date.now() / 1000);
-    return decodedToken.exp < currentTime;
-}
-
-
-let isRefreshing = false;
-let failedQueue = [];
-
-const processQueue = (error, token = null) => {
-    failedQueue.forEach(prom => {
-        if (error) {
-            prom.reject(error);
-        } else {
-            prom.resolve(token);
-        }
-    });
-
-    failedQueue = [];
-};
-
-axios.interceptors.request.use(
-    async (config) => {
-        let token = JSON.parse(localStorage.getItem('user'))?.accessToken;
-
-        if (token && isTokenExpired(token)) {
-            console.log('Token expired');
-            if (!isRefreshing) {
-                isRefreshing = true;
-                try {
-                    const newToken = await refreshAccessToken(params);
-                    localStorage.setItem('user', JSON.stringify({ ...JSON.parse(localStorage.getItem('user')), accessToken: newToken }));
-                    processQueue(null, newToken);
-                    config.headers['Authorization'] = `Bearer ${newToken}`;
-                } catch (error) {
-                    processQueue(error, null);
-                    throw error;
-                } finally {
-                    isRefreshing = false;
-                }
-            } else {
-                return new Promise((resolve, reject) => {
-                    failedQueue.push({ resolve, reject });
-                }).then(token => {
-                    config.headers['Authorization'] = `Bearer ${token}`;
-                    return config;
-                }).catch(error => {
-                    return Promise.reject(error);
-                });
-            }
-        } else {
-            config.headers['Authorization'] = `Bearer ${token}`;
-        }
-        return config;
-    },
-    (error) => {
-        return Promise.reject(error);
-    }
-);
-
 

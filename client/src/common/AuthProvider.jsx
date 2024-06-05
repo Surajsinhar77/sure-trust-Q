@@ -27,6 +27,8 @@ export default function AuthProvider({children}) {
 
     function logout() {
         localStorage.removeItem("user");
+        localStorage.removeItem("accessToken");
+        localStorage.removeItem("refreshToken");
         setUser(null);
     }   
 
@@ -35,17 +37,17 @@ export default function AuthProvider({children}) {
         return;
     }
 
-    // function setAccessTokenFunction(value){
-    //     localStorage.setItem("accessToken", JSON.stringify(value));
-    //     setAccessToken(value);
-    //     return;
-    // }
+    function setAccessTokenFunction(value){
+        localStorage.setItem("accessToken", JSON.stringify(value));
+        setAccessToken(value);
+        return;
+    }
 
-    // function setRefreshTokenfunction(value){
-    //     localStorage.setItem("refreshToken", JSON.stringify(value));
-    //     setRefreshToken(value);
-    //     return;
-    // }
+    function setRefreshTokenfunction(value){
+        localStorage.setItem("refreshToken", JSON.stringify(value));
+        setRefreshToken(value);
+        return;
+    }
 
     return (
         <context.Provider
@@ -57,9 +59,9 @@ export default function AuthProvider({children}) {
                 setLoding,
                 loading,
                 accessToken,
-                setAccessToken,
+                setAccessTokenFunction,
                 refreshToken,
-                setRefreshToken
+                setRefreshTokenfunction
             }}
         >
             {children}

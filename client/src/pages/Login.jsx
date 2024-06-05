@@ -8,7 +8,7 @@ import Loadingbutton from '../components/Loadingbutton';
 export default function LoginPage() {
   const navigate = useNavigate();
   const [userDeatil, setUserDetail] = useState('');
-  const { login, setAccessToken, setRefreshToken} = useAuth();
+  const { login, setAccessTokenFunction, setRefreshTokenfunction} = useAuth();
   const [loading, setLoading] = useState(false);
 
   const onInputChange = (e) => {
@@ -17,7 +17,7 @@ export default function LoginPage() {
   }
 
   const handleLogin = async () => {
-    await LoginUser(userDeatil, setLoading, navigate, login, setAccessToken, setRefreshToken);
+    await LoginUser(userDeatil, setLoading, navigate, login, setAccessTokenFunction, setRefreshTokenfunction);
   };
 
   return (
