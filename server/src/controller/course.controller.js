@@ -40,7 +40,7 @@ const getCourse = async (req, res) => {
         if (userRole !== 'admin' && userRole !== 'teacher') {
             return new ErrorHandling(403, null, 'You are not allowed to get course');
         }
-        const courses = await courseModels.find();
+        const courses = await courseModels.find().populate(['batches']);
         return res.status(200).json(new ApiResponse(200, courses, 'Courses fetched successfully'));
     } catch (err) {
         return res.status(500).json(new ApiResponse(500, {}, err.message));
