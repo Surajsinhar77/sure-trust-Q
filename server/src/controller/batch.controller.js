@@ -96,9 +96,12 @@ const getBatchById = async (req, res) => {
         if (userRole !== 'admin' && userRole !== 'teacher') {
             return new ErrorHandling(403, 'You are not allowed to get batch');
         }
+        if(!req?.params?.id){
+            return res.status(200).json(new ApiResponse(404, {}, "Batch id is not present"))
+        }
         const batchId = z.string().parse(req.params.id);
         const batch = await batchModel.findById(batchId);
-        return res.ststus(200).json(new ApiResponse(200, batch, 'Batch fetched successfully'));
+        return res.status(200).json(new ApiResponse(200, batch, 'Batch fetched successfully'));
     } catch (err) {
         return res.status(500).json(new ApiResponse(500, {}, err.message));
     }
