@@ -18,7 +18,7 @@ const verifyToken = (req, res, next) => {
                 next();
             });
         } else {
-            throw new ErrorHandling('Token is not found or null', 404);
+            throw new ErrorHandling(404 , 'Token not found');
         }
     } catch (err) {
         return res.status(err?.statusCode).json(new ApiResponse(err?.statusCode, {}, err?.message));
@@ -26,5 +26,4 @@ const verifyToken = (req, res, next) => {
 };
 
 module.exports = verifyToken;
-
 // put this in signup to check if user is already exist

@@ -162,7 +162,7 @@ async function loginUser(req, res) {
 
         res.cookie("accessToken", accessToken, options);
         res.cookie("refreshToken", refreshToken, options);
-        res.setHeader('Authorization', `Bearer ${accessToken} refresh ${refreshToken}`);
+        res.setHeader('Authorization', `Bearer ${accessToken}`);
         return res.status(200).json(new ApiResponse(200, { user: userResult, accessToken, refreshToken }, 'User is logged in'));
     } catch (err) {
         res.clearCookie('accessToken');
@@ -212,6 +212,10 @@ const refreshAccessToken = async (req, res) => {
             process.env.REFRESH_TOKEN_SECRET
         )
 
+        // if (!decodedToken) {
+        //     throw new ErrorResponse(401, "Invalid refresh token")
+        // }
+
         const user = await userModel.findById(decodedToken?._id);
 
         if (!user) {
@@ -219,8 +223,7 @@ const refreshAccessToken = async (req, res) => {
         }
 
         if (incomingRefreshToken !== user?.refreshToken) {
-            throw new ErrorResponse(401, "Refresh token is expired or used")
-
+            throw new ErrorResponse(401, "Refresh token is expired or used");
         }
 
         const options = {
@@ -233,8 +236,8 @@ const refreshAccessToken = async (req, res) => {
         return res
             .status(200)
             .cookie("accessToken", accessToken, options)
-            .cookie("refreshToken", incomingRefreshToken, options)
-            .setHeader('Authorization', `Bearer ${accessToken} refresh ${incomingRefreshToken}`)
+            .cookie("refreshToken", user?.refreshToken, options)
+            .setHeader('Authorization', `Bearer ${accessToken}`)
             .json(
                 new ApiResponse(
                     200,
