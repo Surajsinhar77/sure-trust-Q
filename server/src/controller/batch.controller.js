@@ -78,7 +78,7 @@ const getBatch = async (req, res) => {
     try {
         const userRole = req.user.role;
         if (userRole !== 'admin') {
-            return new ErrorHandling(403, 'You are not allowed to get batch');
+            throw new ErrorHandling(403, 'You are not allowed to get batch');
         }
         const batches = await batchModel.find().populate([
             { path: 'courseId' },
@@ -94,10 +94,10 @@ const getBatchById = async (req, res) => {
     try {
         const userRole = req.user.role;
         if (userRole !== 'admin' && userRole !== 'teacher') {
-            return new ErrorHandling(403, 'You are not allowed to get batch');
+            throw new ErrorHandling(403, 'You are not allowed to get batch');
         }
         if(!req?.params?.id){
-            return res.status(200).json(new ApiResponse(404, {}, "Batch id is not present"))
+            throw new ErrorHandling(404, "id is invalid");
         }
         const batchId = z.string().parse(req.params.id);
         const batch = await batchModel.findById(batchId);
