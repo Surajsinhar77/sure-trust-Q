@@ -97,10 +97,15 @@ const getBatchById = async (req, res) => {
             throw new ErrorHandling(403, 'You are not allowed to get batch');
         }
         if(!req?.params?.id){
-            throw new ErrorHandling(404, "id is invalid");
+            throw new ErrorHandling(401, "id is invalid");
         }
-        const batchId = z.string().parse(req.params.id);
+        const batchId = z.string(24).parse(req.params.id);
+
+        console.log("here i sthe batchId ", batchId);
         const batch = await batchModel.findById(batchId);
+        if(!batch){
+            throw new ErrorHandling(404, "Data is not found")
+        }
         return res.status(200).json(new ApiResponse(200, batch, 'Batch fetched successfully'));
     } catch (err) {
         return res.status(500).json(new ApiResponse(500, {}, err.message));

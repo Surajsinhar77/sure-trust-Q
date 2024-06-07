@@ -51,14 +51,17 @@ const getCourseById = async (req, res) => {
     try {
         const userRole = req.user.role;
         if (userRole !== 'admin' && userRole !== 'teacher') {
-            return new ErrorHandling(403, null, 'You are not allowed to get course');
+            throw new ErrorHandling(403, 'You are not allowed to get course');
         }
-        const courseId = z.string().parse(req.params.id);
+        const courseId = z.string(24).parse(req.params.id);
 
-        const course = await courseModels.findById(courseId);
-        return new ApiResponse(200, course, 'Course fetched successfully').send(res);
+        const course = await courseModels.findById(courseId).populate(['batches']);
+        if(!course){
+            throw new ErrorHandling(404, 'Course not Found');
+        }
+        return res.status(200).json(new ApiResponse(200, course, 'Course fetched successfully'));
     } catch (err) {
-        return new ErrorHandling(500, null, err.message);
+        return res.status(401).json(new ApiResponse(401, {}, err.message));
     }
 }
 
