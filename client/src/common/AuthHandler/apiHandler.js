@@ -127,6 +127,10 @@ export async function RegisterUser(userDetail, setLoading, navigate, selectedFil
         newform.append('email', userDetail.email);
         newform.append('password', userDetail.password);
         newform.append('file', selectedFile);
+        newform.append('role', 'student');
+        newform.append('courseId' , '665e66419412445cf19d4522'); // just for now 
+        newform.append('batchId' , '665e78c8550b4629740391f7'); // just for now
+
 
         const response = await axios.post(`${params?.productionBaseAuthURL}/signup`, newform, {
             withCredentials: true,

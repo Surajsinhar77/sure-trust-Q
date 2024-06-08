@@ -37,6 +37,7 @@ const userDataRegister = z.object({
         'Password must be at least 8 characters long and include at least one uppercase letter, one lowercase letter, one number, and one special character.'
     ),
     courseId : z.string(24),
+    batchId : z.string(24),
     //optional role 
     role: z.string().optional()
 });
@@ -74,7 +75,8 @@ async function registerUser(req, res) {
                 password: hashedPassword,
                 role: userData.role,
                 profilePicture: image_url,
-                courseId: userData.courseId
+                courseId: userData.courseId,
+                batchId: userData.batchId
             });
 
             if (!result) {
