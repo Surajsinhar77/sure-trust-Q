@@ -78,6 +78,11 @@ const userSchema = new mongoose.Schema({
         default: '',
     },
     
+    courseId :{
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Course',
+        required: true,
+    }
 }, { timestamps: true });
 
 
