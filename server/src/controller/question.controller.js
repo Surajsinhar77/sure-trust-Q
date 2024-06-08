@@ -10,7 +10,7 @@ const e = require('express');
 const addQuestionVaild = z.object({
     courseId: z.string(24).nonempty(), 
     title: z.string().nonempty(),   
-    text: z.string().nonempty(),    
+    text: z.string().nonempty(),   
     codeSnippet: z.string().optional(),        
     tags: z.string().optional(),              
     batchId: z.string(24).nonempty(), 
@@ -40,6 +40,8 @@ async function addQuestion(req, res){
             }
         }
 
+        console.log('images', images);
+
         const question = new questionModel({
             userId: userId,
             courseId: questionDetailVaild.courseId,
@@ -52,7 +54,7 @@ async function addQuestion(req, res){
         });
 
         await question.save();
-        return res.status(201).json(new ApiResponse(201, question, 'Question added successfully' ));
+        return res.status(200).json(new ApiResponse(201, question, 'Question added successfully' ));
     }catch(err){
         return res.status(500).json(new ErrorHandling(500, err.message , [err], err.stack));
     }
@@ -91,9 +93,9 @@ async function getQuestion(req, res){
             questions,
             pagination
         }
-        return new ApiResponse(200, result, 'Questions fetched successfully').send(res);
+        return res.status(200).json(new ApiResponse(200, result, 'Questions fetched successfully'));
     }catch(err){
-        return new ErrorHandling(500, null, err.message);
+        return res.status(500).json(new ErrorHandling(500, err.message , [err], err.stack));
     }
 };
 

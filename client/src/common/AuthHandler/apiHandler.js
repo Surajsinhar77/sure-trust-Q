@@ -207,8 +207,32 @@ export async function addNewQuestion(newQuestion, setLoading, navigate) {
         throw new Error(response.data.message);
     } catch (error) {
         console.log("Error in addNewQuestion : ", error.message);
-        toast.error(error.response?.data?.message, false);
+        toast.error(error?.response?.data?.message || error.message,  false);
         setLoading(false);
     }
 }
 
+
+export async function getQuestions(setLoading) {
+    try {
+        let token = await checkingTokenExpiry();
+        const response = await axios.get(`${params?.questionURL}/getQuestion`, {
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': 'Bearer ' + token,
+            },
+            withCredentials: true,
+        });
+        if (response.status === 200) {
+            setLoading(false);
+            console.log("Questions fetched successfully ", response.data?.data);
+            toast.success(response.data.message, true);
+            return response.data?.data;
+        }
+        throw new Error(response.data.message);
+    } catch (error) {
+        console.log("Error in getQuestions : ", error.message);
+        toast.error(error?.response?.data?.message || error.message, false);
+        setLoading(false);
+    }
+}
