@@ -82,6 +82,12 @@ const userSchema = new mongoose.Schema({
         type: mongoose.Schema.Types.ObjectId,
         ref: 'Course',
         required: true,
+    },
+
+    batchId : {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Batch',
+        required: true,
     }
 }, { timestamps: true });
 

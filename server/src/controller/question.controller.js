@@ -8,12 +8,12 @@ const e = require('express');
 // Create and Save a new Question
 
 const addQuestionVaild = z.object({
-    courseId: z.string().nonempty(), 
+    courseId: z.string(24).nonempty(), 
     title: z.string().nonempty(),   
     text: z.string().nonempty(),    
-    codeSnippet: z.string(),        
-    tags: z.string(),              
-    batchId: z.string().nonempty(), 
+    codeSnippet: z.string().optional(),        
+    tags: z.string().optional(),              
+    batchId: z.string(24).nonempty(), 
 });
 
 async function addQuestion(req, res){
@@ -50,6 +50,8 @@ async function addQuestion(req, res){
             images: images,
             batchId: questionDetailVaild.batchId,
         });
+
+        await question.save();
         return res.status(201).json(new ApiResponse(201, question, 'Question added successfully' ));
     }catch(err){
         return res.status(500).json(new ErrorHandling(500, err.message , [err], err.stack));

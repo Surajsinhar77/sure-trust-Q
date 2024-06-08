@@ -27,8 +27,8 @@ const questionSchema = new mongoose.Schema({
     },
 
     tags: {
-        type: [String],
-        default: [],
+        type: String,
+        default: '',
     },
     
     images: {

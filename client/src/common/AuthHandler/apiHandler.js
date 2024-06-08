@@ -21,46 +21,6 @@ function isTokenExpired(token) {
 }
 
 
-// function call before every api call to check if token is expired
-// export const checkingTokenExpiry = async () => {
-//     try{
-//         console.log("Checking token expiry");
-//         const token = JSON.parse(localStorage.getItem('accessToken'));
-//         if (isTokenExpired(token)){
-//             const response = await axios.get(`${params?.productionBaseAuthURL}/refreshAccessToken`, {
-//                 withCredentials: true,
-//                 headers: {
-//                     'Content-Type': 'application/json',
-//                     'Authorization': 'Bearer ' + JSON.parse(localStorage.getItem('accessToken')),
-//                 }
-//             });
-
-//             if (response.status === 200) {
-//                 localStorage.setItem('accessToken', JSON.stringify(response?.data?.data?.accessToken));
-//                 localStorage.setItem('refreshToken', JSON.stringify(response?.data?.data?.refreshToken));
-//                 console.log("Token refreshed successfully");
-//                 return response?.data?.data?.accessToken;
-//             } else {
-//                 // navigate('/login');
-//                 toast.error(response.data.message, false);
-//                 throw new Error(response.data.message);
-//             }
-//         }
-//         return null;
-//     } catch (error) {
-//         toast.error("Token expired, please login again", false);
-//         localStorage.removeItem('accessToken');
-//         localStorage.removeItem('refreshToken');
-//         localStorage.removeItem('user');
-//         window.location.href = '/login';
-//         toast.error("Token expired, please login again", false);
-//         console.log("Error in checkingTokenExpiry : ", error.message);
-//         return null;
-//     }
-// }
-
-
-
 export const checkingTokenExpiry = async () => {
     try {
         const token = JSON.parse(localStorage.getItem('accessToken'));
@@ -228,8 +188,9 @@ export async function addNewQuestion(newQuestion, setLoading, navigate) {
     try {
         let token = await checkingTokenExpiry();
 
-        const response = await axios.post(`${params?.productionBaseAuthURL}/addNewQuestion`,
-            { question: newQuestion },
+        console.log("newQuestion : ", newQuestion);
+        const response = await axios.post(`${params?.questionURL}/addQuestion`,
+            newQuestion,
             {
                 headers: {
                     'Content-Type': 'application/json',
@@ -238,12 +199,16 @@ export async function addNewQuestion(newQuestion, setLoading, navigate) {
                 withCredentials: true,
             });
         if (response.status === 200) {
-            console.log("Question added successfully");
-            return response.data;
+            console.log("Question added successfully ", response.data?.data);
+            toast.success(response.data.message, true);
+            setLoading(false);
+            return response.data?.data;
         }
         throw new Error(response.data.message);
     } catch (error) {
         console.log("Error in addNewQuestion : ", error.message);
+        toast.error(error.response?.data?.message, false);
+        setLoading(false);
     }
 }
 

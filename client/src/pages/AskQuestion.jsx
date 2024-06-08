@@ -16,18 +16,11 @@ export default function Example(){
     
   }
   const [formData, setFormData] = useState({
-    projectName: "",
-    dateStart: "",
-    dateEnd: "",
-    projectsTags: "",
-    projectLink: "",
-    githubLink: "",
-    projectOverview: "",
-    feature: [""],
-    techStack: [""],
-    imageFolderName: "",
-    imageRef: "",
-    youtubeLink: "",
+    title : "",
+    description : "",
+    file : [],
+    tags : [],
+    code : "",
   });
 
   
@@ -55,7 +48,7 @@ export default function Example(){
   // handle submit function
   async function handleSubmit(e) {
     console.log("Form Data : before api call", formData);
-    addNewQuestion(formData, setSpaceRef, files);
+    // addNewQuestion(formData, setSpaceRef, files);
     // }
   }
 
