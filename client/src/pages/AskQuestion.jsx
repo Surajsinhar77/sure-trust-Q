@@ -4,6 +4,7 @@ import { FaUserCircle } from 'react-icons/fa';
 const uploadImages = async (files, projectName) => {
   return ;
 };
+import {addNewQuestion} from '../common/AuthHandler/apiHandler';
 
 
 export default function Example(){
@@ -28,6 +29,7 @@ export default function Example(){
     imageRef: "",
     youtubeLink: "",
   });
+
   
   // Handle image function
   const handleImage = (e) => {
@@ -53,18 +55,7 @@ export default function Example(){
   // handle submit function
   async function handleSubmit(e) {
     console.log("Form Data : before api call", formData);
-    // e.preventDefault();
-    // try{
-    //   const res = await axios.post('/api/dashboard', formData);
-    //   if(res.status === 200){
-    //     console.log("Response", res);
-    //     alert("Project uploaded successfully");
-    //     return ;
-    //   }
-    //   throw new Error("from the response part Error uploading project"); 
-    // } catch (error) {
-    //   console.log("Error", error);
-    //   alert("Error uploading project");
+    addNewQuestion(formData, setSpaceRef, files);
     // }
   }
 

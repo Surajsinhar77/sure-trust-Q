@@ -22,10 +22,49 @@ function isTokenExpired(token) {
 
 
 // function call before every api call to check if token is expired
+// export const checkingTokenExpiry = async () => {
+//     try{
+//         console.log("Checking token expiry");
+//         const token = JSON.parse(localStorage.getItem('accessToken'));
+//         if (isTokenExpired(token)){
+//             const response = await axios.get(`${params?.productionBaseAuthURL}/refreshAccessToken`, {
+//                 withCredentials: true,
+//                 headers: {
+//                     'Content-Type': 'application/json',
+//                     'Authorization': 'Bearer ' + JSON.parse(localStorage.getItem('accessToken')),
+//                 }
+//             });
+
+//             if (response.status === 200) {
+//                 localStorage.setItem('accessToken', JSON.stringify(response?.data?.data?.accessToken));
+//                 localStorage.setItem('refreshToken', JSON.stringify(response?.data?.data?.refreshToken));
+//                 console.log("Token refreshed successfully");
+//                 return response?.data?.data?.accessToken;
+//             } else {
+//                 // navigate('/login');
+//                 toast.error(response.data.message, false);
+//                 throw new Error(response.data.message);
+//             }
+//         }
+//         return null;
+//     } catch (error) {
+//         toast.error("Token expired, please login again", false);
+//         localStorage.removeItem('accessToken');
+//         localStorage.removeItem('refreshToken');
+//         localStorage.removeItem('user');
+//         window.location.href = '/login';
+//         toast.error("Token expired, please login again", false);
+//         console.log("Error in checkingTokenExpiry : ", error.message);
+//         return null;
+//     }
+// }
+
+
+
 export const checkingTokenExpiry = async () => {
-    try{
+    try {
         const token = JSON.parse(localStorage.getItem('accessToken'));
-        if (isTokenExpired(token)){
+        if (isTokenExpired(token)) {
             const response = await axios.get(`${params?.productionBaseAuthURL}/refreshAccessToken`, {
                 withCredentials: true,
                 headers: {
@@ -45,15 +84,15 @@ export const checkingTokenExpiry = async () => {
                 throw new Error(response.data.message);
             }
         }
-        return null;
+        return token;
     } catch (error) {
         toast.error("Token expired, please login again", false);
         localStorage.removeItem('accessToken');
         localStorage.removeItem('refreshToken');
         localStorage.removeItem('user');
-        window.location.href = '/login';
         toast.error("Token expired, please login again", false);
         console.log("Error in checkingTokenExpiry : ", error.message);
+        window.location.href = '/login';
         return null;
     }
 }
@@ -144,7 +183,7 @@ export async function RegisterUser(userDetail, setLoading, navigate, selectedFil
         }
         throw new Error(response.data.message);
     } catch (error) {
-        toast.error(error.response?.data?.message , false);
+        toast.error(error.response?.data?.message, false);
         setLoading(false)
     }
 }
@@ -152,14 +191,15 @@ export async function RegisterUser(userDetail, setLoading, navigate, selectedFil
 export const UserLogout = async (navigate, logoutContextApi) => {
     try {
         let newToken = await checkingTokenExpiry();
-        if(newToken === null) {  
-            newToken = JSON.parse(localStorage.getItem('accessToken'));  
+        if (newToken === null) {
+            newToken = JSON.parse(localStorage.getItem('accessToken'));
         }
-        // const response = await axios.get(`${params?.productionBaseAuthURL}/logout`, {
-        const response = await axios.get(`http://localhost:8000/api/v1/auth/logout`, {
+        console.log("newToken : ", newToken)
+        const response = await axios.get(`${params?.productionBaseAuthURL}/logout`, {
+            // const response = await axios.get(`http://localhost:8000/api/v1/auth/logout`, {
             headers: {
                 'Content-Type': 'application/json',
-                'Authorization': 'Bearer ' +newToken,
+                'Authorization': 'Bearer ' + newToken,
             },
             // pass cookies as well
             withCredentials: true,
@@ -174,8 +214,8 @@ export const UserLogout = async (navigate, logoutContextApi) => {
         throw new Error(response.data.message);
     }
     catch (error) {
-        toast.error("Try login again " , false);   
-        toast.error(error?.response?.data?.message || error.message , false);
+        toast.error("Try login again ", false);
+        toast.error(error?.response?.data?.message || error.message, false);
         logoutContextApi();
         localStorage.removeItem('accessToken');
         localStorage.removeItem('refreshToken');
@@ -184,37 +224,26 @@ export const UserLogout = async (navigate, logoutContextApi) => {
     }
 }
 
-// const refreshAccessToken = async () => {
-//     try {
-//         if (isTokenExpired(JSON.parse(localStorage.getItem('user'))?.accessToken)) {
-//             console.log('Token expired --------------------> 1');
-//             // this request will  not execute after we reach here
-//             const response = await axios.get(`${params?.productionBaseAuthURL}/refreshAccessToken`, {
-//                 withCredentials: true,
-//                 headers: {
-//                     'Content-Type': 'application/json',
-//                     'Authorization': 'Bearer ' + JSON.parse(localStorage.getItem('accessToken')),
-//                 }
-//             });
+export async function addNewQuestion(newQuestion, setLoading, navigate) {
+    try {
+        let token = await checkingTokenExpiry();
 
-//             if (response.status === 200) {
-//                 localStorage.setItem('accessToken', JSON.stringify(response?.data?.data?.accessToken));
-//                 localStorage.setItem('refreshToken', JSON.stringify(response?.data?.data?.refreshToken));
-//                 console.log("Token refreshed successfully");
-//                 return response?.data?.data?.accessToken;
-//             } else {
-//                 // navigate('/login');
-//                 toast.error("Token expired, please login again", false);
-//                 throw new Error("Token expired, please login again");
-//             }
-//         }
-//         console.log('Token expired --------------------> 2');
-//         return JSON.parse(localStorage.getItem('accessToken'));
-//     }
-//     catch (error) {
-//         setLoading(false);
-//         toast.error(error.message, false);
-//         return null;
-//     }
-// }
+        const response = await axios.post(`${params?.productionBaseAuthURL}/addNewQuestion`,
+            { question: newQuestion },
+            {
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': 'Bearer ' + token,
+                },
+                withCredentials: true,
+            });
+        if (response.status === 200) {
+            console.log("Question added successfully");
+            return response.data;
+        }
+        throw new Error(response.data.message);
+    } catch (error) {
+        console.log("Error in addNewQuestion : ", error.message);
+    }
+}
 
