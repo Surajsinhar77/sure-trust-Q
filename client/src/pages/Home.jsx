@@ -12,7 +12,6 @@ async function fetchQuestions(setQuestions, setLoading) {
     const response = await getQuestions();
     setQuestions(response?.questions);
     setLoading(false);
-    console.log(" line no 14 Home ", response);
   } catch (error) {
     console.error("Error fetching questions:", error);
   }

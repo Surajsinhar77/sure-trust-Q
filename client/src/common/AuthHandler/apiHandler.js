@@ -225,7 +225,6 @@ export async function getQuestions() {
             withCredentials: true,
         });
         if (response.status === 200) {
-            console.log("Questions fetched successfully ", response.data?.data);
             return response.data?.data;
         }
         throw new Error(response.data.message);
