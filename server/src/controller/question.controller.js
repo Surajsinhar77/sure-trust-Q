@@ -67,7 +67,7 @@ async function getQuestion(req, res){
         const limit = parseInt(req.query.limit) || 10;
         const offset = (page - 1) * limit;
        
-        const questions = await questionModel.find().skip(offset).limit(limit);
+        const questions = await questionModel.find().skip(offset).limit(limit).populate(['userId', 'courseId', 'batchId']);
         const startIndex = (page - 1) * limit;
         const endIndex = page * limit;
         const total = await questionModel.countDocuments();

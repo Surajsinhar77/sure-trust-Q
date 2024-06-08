@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 // import ResponsiveAppbar from '../components/ResponsiveAppBar';
 import { Outlet } from 'react-router-dom'; 
 import Questioncard from "../components/Questioncard";
@@ -9,8 +9,9 @@ import { useAuth} from '../common/AuthProvider'
 
 async function fetchQuestions(setQuestions, setLoading) {
   try {
-    const response = await getQuestions(setLoading);
-    setQuestions(response);
+    const response = await getQuestions();
+    setQuestions(response?.questions);
+    setLoading(false);
     console.log(" line no 14 Home ", response);
   } catch (error) {
     console.error("Error fetching questions:", error);
@@ -19,7 +20,7 @@ async function fetchQuestions(setQuestions, setLoading) {
 
 export default function Home() {
   const { setLoding } = useAuth();
-  const [questions, setQuestions] = React.useState([]);
+  const [questions, setQuestions] = useState([]);
   
   useEffect(() => {
     fetchQuestions(setQuestions, setLoding );
@@ -27,9 +28,10 @@ export default function Home() {
   return (
     <Box gap={3}>
       <div  className=" flex flex-col gap-6">
-        <Questioncard/>
-        <Questioncard/>
-        <Questioncard/>
+
+        {questions.map((question) => (
+          <Questioncard key={question._id} question={question} />
+        ))}
       </div>
       <Outlet/>
     </Box>

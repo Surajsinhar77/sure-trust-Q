@@ -54,7 +54,7 @@ const ExpandMore = styled((props) => {
   }),
 }));
 
-export default function Questioncard() {
+export default function Questioncard({question}) {
   const [expanded, setExpanded] = React.useState(false);
   const [open, setOpen] = React.useState(false);
   const onClose = () => setOpen(false);
