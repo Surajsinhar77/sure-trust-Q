@@ -68,7 +68,7 @@ const addBatch = async (req, res) => {
             { path: 'courseId' },
             { path: 'TeacherId' }
         ]);
-        return res.status(201).json(new ApiResponse(200, batchInfo, 'Batch added successfully'));
+        return res.status(200).json(new ApiResponse(201, batchInfo, 'Batch added successfully'));
     } catch (err) {
         return res.status(500).json(new ApiResponse(500, {}, err.message));
     }
