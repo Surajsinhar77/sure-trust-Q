@@ -257,7 +257,7 @@ const refreshAccessToken = async (req, res) => {
 const getUser = async (req, res) => {
     try {
         const userId = z.string().min(24).parse(req?.params?.id || req?.query?.id); 
-        const user = await userModel.findById(userId).select('-password -refreshToken');
+        const user = await userModel.findById(userId).select('-password -refreshToken').populate['courseId','batchId'];
         if (!user) {
             throw new ErrorResponse(404, 'User is not found');
         }
