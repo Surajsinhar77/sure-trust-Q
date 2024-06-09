@@ -276,7 +276,7 @@ const getUsers = async (req, res) => {
         const page = parseInt(req.query.page) || 1;
         const skip = (page - 1) * limit;
 
-        const users = await userModel.find().limit(limit).skip(skip).select('-password -refreshToken');
+        const users = await userModel.find().limit(limit).skip(skip).select('-password -refreshToken').populate(['batchId', 'courseId']);
         if (!users) {
             throw new ErrorResponse(404, 'Users are not found');
         }
