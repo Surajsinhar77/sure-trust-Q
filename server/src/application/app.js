@@ -16,7 +16,7 @@ app.use(cookiesParser());
 app.use(express.json());
 
 const corsOptions = {
-    origin: 'http://localhost:5173', // Replace with your frontend domain
+    origin: ['http://localhost:5173', 'https://suretrustqa.vercel.app'], // Replace with your frontend domain
     credentials: true // Allow credentials (cookies, authorization headers, etc.)
 };
 app.use(cors(corsOptions));
