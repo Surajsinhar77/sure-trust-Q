@@ -79,19 +79,19 @@ async function registerUser(req, res) {
                 batchId: userData.batchId
             });
 
+            const result = await user.save();
+
             if (!result) {
                 await deleteFromCloudinary(public_id);
                 throw new ErrorResponse(404, 'User is not created');
             }
 
-            const userCreated = await userModel.findById(result._id).select('-password -refreshToken');
+            const userCreated = await userModel.findById(result._id).select('-password -refreshToken').populate('courseId').populate('batchId');
 
             if (!userCreated) {
                 await deleteFromCloudinary(public_id);
                 throw new ErrorResponse(404, 'User is not created');
             }
-
-            const result = await user.save();
 
             return res.status(200).json(
                 new ApiResponse(201, userCreated, 'User is created successfully')
