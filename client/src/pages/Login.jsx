@@ -36,6 +36,7 @@ export default function LoginPage() {
               type="email"
               label="Email"
               name="email"
+              placeholder="admin123@gmail.com"
               onChange={(e) => onInputChange(e)}
             />
           </label>
@@ -50,6 +51,7 @@ export default function LoginPage() {
               type="password"
               label="Password"
               name="password"
+              placeholder="Admin@123"
               onChange={(e) => onInputChange(e)}
             />
           </label>
