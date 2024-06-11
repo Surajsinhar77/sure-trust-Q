@@ -291,17 +291,13 @@ const getUsers = async (req, res) => {
 
 const deleteUser = async (req, res) => {
     try {
-        console.log("this is the user delete funtion ", req.params.id);
         const user = await userModel.findById(req.params.id);
 
         if (!user) {
             throw new ErrorResponse(404, 'User is not found');
         }
 
-        const deleteUser = await user.remove();
-        if(!deleteUser){
-            throw new ErrorResponse(404, 'User is not deleted');
-        }
+        const delUser = await user.deleteOne();
 
         if(!delUser){
             throw new ErrorResponse(404, 'User is not deleted');
