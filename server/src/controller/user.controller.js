@@ -291,13 +291,23 @@ const getUsers = async (req, res) => {
 
 const deleteUser = async (req, res) => {
     try {
-        const user = await userModel.findByIdAndDelete(req.params.id);
+        const user = await userModel.findById(req.params.id);
+
         if (!user) {
             throw new ErrorResponse(404, 'User is not found');
         }
-        return new ApiResponse(200, {}, 'User is deleted').send(res);
+
+        const deleteUser = await user.remove();
+        if(!deleteUser){
+            throw new ErrorResponse(404, 'User is not deleted');
+        }
+
+        if(!delUser){
+            throw new ErrorResponse(404, 'User is not deleted');
+        }
+        return res.status(200).json(new ApiResponse(200, {}, 'User is deleted'));
     } catch (err) {
-        throw new ErrorResponse(404, err.message);
+        return res.status(err.statusCode || 500).json(new ApiResponse(err.statusCode || 500, {}, err.message));
     }
 }
 

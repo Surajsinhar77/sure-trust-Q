@@ -33,6 +33,9 @@ const batchSchema = new mongoose.Schema({
     
 }, { timestamps: true });
 
+
+// i just want to delete one user from the batch with is User Id array
+
 const Batch = mongoose.model('Batch', batchSchema);
 
 module.exports = Batch;

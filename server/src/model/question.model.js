@@ -44,12 +44,6 @@ const questionSchema = new mongoose.Schema({
 }, { timestamps: true });
 
 
-questionSchema.pre('remove', async function(next) {
-    const question = this;
-    await answerModel.deleteMany({ questionId: question._id });
-    next();
-});
-
 
 const Question = mongoose.model('Question', questionSchema);
 

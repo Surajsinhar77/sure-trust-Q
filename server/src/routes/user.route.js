@@ -9,7 +9,7 @@ router.route('/signup').post(upload , registerUser);
 router.route('/login').post(loginUser);
 router.route('/userById/:id').get(verifyToken, getUser);
 router.route('/users').get(verifyToken, getUsers);
-router.route('/deleteUser/:id').delete(verifyToken, deleteUser);
+router.route('/deleteUserById/:id').delete(verifyToken, deleteUser);
 router.route('/logout').get(verifyToken, logoutUser);
 router.route('/updateUser/:id').put(verifyToken, updateUser);
 router.route('/refreshAccessToken').get(refreshAccessToken);

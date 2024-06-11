@@ -2,6 +2,10 @@ const mongoose = require('mongoose');
 const bcrypt = require('bcrypt');
 const {genrateAccessToken, genrateRefreshToken} = require('../service/genrateToken.service');
 const role = ['admin', 'student' ,'teacher'];
+const questionModel = require('./question.model');  
+const answerModel = require('./answer.model');
+const endrollment = require('./enrollment.model');
+const batchModel = require('./batch.model');
 
 const userSchema = new mongoose.Schema({
     name: {
@@ -108,6 +112,27 @@ userSchema.methods.genrateAccessTkn = function() {
 userSchema.methods.isPasswordMatch = async function(password) {
     return await bcrypt.compare(password, this.password);
 }
+
+
+userSchema.pre('remove', async function(next) {
+    const userId = this._id;
+    const Question = mongoose.model('Question');
+    const Answer = mongoose.model('Answer');
+    const Enrollment = mongoose.model('Enrollment');
+    const Batch = mongoose.model('Batch');
+    
+    try {
+        // Remove all references to the user in other collections
+        await Question.deleteMany({ userId: userId });
+        await Answer.deleteMany({ userId: userId });
+        await Enrollment.deleteMany({ userId: userId });
+        await Batch.updateMany({ userId: userId }, { $pull: { userId: userId } });
+        
+        next();
+    } catch (err) {
+        next(err);
+    }
+})
 
 const User = mongoose.model('User', userSchema);
 

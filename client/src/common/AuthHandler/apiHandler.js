@@ -237,3 +237,25 @@ export async function getQuestions() {
         toast.error(error?.response?.data?.message || error.message, false);
     }
 }
+
+
+export async function deleteUserById(id){
+    try {
+        let token = await checkingTokenExpiry();
+        const response = await axios.delete(`${params?.productionBaseAuthURL}/deleteUserById/${id}`, {
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': 'Bearer ' + token,
+            },
+            withCredentials: true,
+        });
+        if (response.status === 200) {
+            console.log("User deleted successfully ", response.data?.message);
+            return response.data;
+        }
+        throw new Error(response.data.message);
+    } catch (error) {
+        console.log("Error in deleteUserById : ", error.message);
+        toast.error(error?.response?.data?.message || error.message, false);
+    }
+}
