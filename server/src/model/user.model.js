@@ -4,7 +4,7 @@ const {genrateAccessToken, genrateRefreshToken} = require('../service/genrateTok
 const role = ['admin', 'student' ,'teacher'];
 const questionModel = require('./question.model');  
 const answerModel = require('./answer.model');
-const endrollment = require('./enrollment.model');
+const endrollment = require('./endrollment.model');
 const batchModel = require('./batch.model');
 
 const userSchema = new mongoose.Schema({

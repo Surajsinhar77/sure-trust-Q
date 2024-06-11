@@ -291,6 +291,7 @@ const getUsers = async (req, res) => {
 
 const deleteUser = async (req, res) => {
     try {
+        console.log("this is the user delete funtion ", req.params.id);
         const user = await userModel.findById(req.params.id);
 
         if (!user) {
