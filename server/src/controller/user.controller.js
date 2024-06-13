@@ -51,6 +51,7 @@ async function registerUser(req, res) {
         const profileImageLocalAddress = req?.file?.path;
         // console.log('profileImageLocalAddress', req.file);
 
+        console.log("the data getting from the login ", req.body, "file also ", req?.file)
         if (!profileImageLocalAddress) {
             throw new ErrorResponse(404, 'Profile image is required');
         }
