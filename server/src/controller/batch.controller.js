@@ -102,10 +102,7 @@ const getBatchById = async (req, res) => {
         const batchId = z.string(24).parse(req.params.id);
 
         console.log("here i sthe batchId ", batchId);
-        const batch = await batchModel.findById(batchId).populate(
-            { path: 'TeacherId' },
-            { path: 'userId' },
-        );
+        const batch = await batchModel.findById(batchId).populate(['userId', 'TeacherId']);
         if(!batch){
             throw new ErrorHandling(404, "Data is not found")
         }
