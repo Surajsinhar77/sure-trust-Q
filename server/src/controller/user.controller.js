@@ -1,5 +1,6 @@
 const userModel = require('../model/user.model');
 const endrollmentModel = require('../model/endrollment.model');
+const batchModel = require('../model/batch.model');
 const z = require('zod');
 const jwt = require('jsonwebtoken');
 const bcrypt = require('bcrypt');
@@ -39,7 +40,7 @@ const userDataRegister = z.object({
     courseId : z.string(24),
     batchId : z.string(24),
     //optional role 
-    role: z.string().optional()
+    role: z.string(['student', 'teacher', 'admin'])
 });
 
 
@@ -69,7 +70,7 @@ async function registerUser(req, res) {
 
         const hashedPassword = await bcrypt.hash(userData.password, 10);
 
-        if (userData?.role) {
+        // if (userData?.role) {
             const user = new userModel({
                 name: userData.name,
                 email: userData.email,
@@ -87,6 +88,15 @@ async function registerUser(req, res) {
                 throw new ErrorResponse(404, 'User is not created');
             }
 
+            await batchModel.findByIdAndUpdate(
+                userData?.batchId,
+                {
+                    $push:{userId : result._id}
+                },
+                {new : true}
+            )
+
+            
             const userCreated = await userModel.findById(result._id).select('-password -refreshToken').populate('courseId').populate('batchId');
 
             if (!userCreated) {
@@ -97,31 +107,32 @@ async function registerUser(req, res) {
             return res.status(200).json(
                 new ApiResponse(201, userCreated, 'User is created successfully')
             );
-        } else {
-            const user = await userModel.create({
-                name: userData.name,
-                email: userData.email,
-                password: hashedPassword,
-                profilePicture: image_url
-            });
+        // } 
+        // else {
+        //     const user = await userModel.create({
+        //         name: userData.name,
+        //         email: userData.email,
+        //         password: hashedPassword,
+        //         profilePicture: image_url,
+        //     });
 
-            if (!user) {
-                await deleteFromCloudinary(public_id);
-                throw new ErrorResponse(404, 'User is not created');
-            }
+        //     if (!user) {
+        //         await deleteFromCloudinary(public_id);
+        //         throw new ErrorResponse(404, 'User is not created');
+        //     }
 
-            const userCreated = await userModel.findById(user._id).select('-password -refreshToken');
+        //     const userCreated = await userModel.findById(user._id).select('-password -refreshToken');
 
-            if (!userCreated) {
-                await userModel.findByIdAndDelete(user._id);
-                await deleteFromCloudinary(public_id);
-                throw new ErrorResponse(404, 'User is not created');
-            }
+        //     if (!userCreated) {
+        //         await userModel.findByIdAndDelete(user._id);
+        //         await deleteFromCloudinary(public_id);
+        //         throw new ErrorResponse(404, 'User is not created');
+        //     }
 
-            return res.status(200).json(
-                new ApiResponse(201, { userCreated }, 'User is created successfully')
-            );
-        }
+        //     return res.status(200).json(
+        //         new ApiResponse(201, { userCreated }, 'User is created successfully')
+        //     );
+        // }
     } catch (err) {
         return res.status(err.statusCode || 500).json(new ApiResponse(err.statusCode || 500, {}, err.message));
     }
