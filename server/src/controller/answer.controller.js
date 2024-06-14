@@ -47,7 +47,7 @@ const addAnswer = async (req, res) => {
         await question.save();
         return res.status(200).json(new ApiResponse(201, question, 'Question added successfully'));
     } catch (err) {
-        return res.status(500).json(new ErrorHandling(500, err.message));
+        return res.status(500).json(new ApiResponse(500, {}, err.message));
     }
 }
 
