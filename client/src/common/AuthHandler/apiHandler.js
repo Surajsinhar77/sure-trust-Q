@@ -263,15 +263,21 @@ export async function deleteUserById(id){
 
 export async function submitAnswer(answerForm, id ){
     try{
-        console.log("answerForm : ", answerForm, id);
-
         let token = await checkingTokenExpiry();
-        const response = await axios.post(`${params?.answerURL}/addAnswer/${id}`, answerForm, {
-            headers: {
+
+        console.log("answerForm : ", answerForm, id);
+        const form = new FormData();
+        form.append('text', answerForm.text);
+        form.append('codeSnippet', answerForm.codeSnippet);
+        form.append('file', answerForm.file);
+
+        // const response = await axios.post(`${params?.answerURL}/addAnswer/${id}`, answerForm, {
+            const response = await axios.post(`http://localhost:8000/api/v1/answer/addAnswer/${id}`, form, {
+                withCredentials: true,
+                headers: {
                 'Content-Type': 'multipart/form-data',
                 'Authorization': 'Bearer ' + token,
             },
-            withCredentials: true,
         });
         console.log("this is response from the submitAnswer", response)
         if(response.status === 200){

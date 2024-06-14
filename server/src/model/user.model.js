@@ -97,7 +97,9 @@ const userSchema = new mongoose.Schema({
 
 
 userSchema.methods.genrateRefToken = function() {
-    return genrateRefreshToken({_id : this._id});
+    const newtoken = genrateRefreshToken({_id : this._id});
+    this.refreshToken = newtoken;
+    return newtoken;
 }
 
 userSchema.methods.genrateAccessTkn = function() {

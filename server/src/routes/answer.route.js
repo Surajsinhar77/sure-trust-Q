@@ -3,10 +3,10 @@ const {addAnswer, getAnswer, allAnswer, deleteAnswer , updateAnswer} = require('
 const router = express.Router();
 const {upload} = require('../utlity/uploadImageFunction')
 
-router.route('/addAnswer/:id').post(addAnswer, upload);
+router.route('/addAnswer/:id').post(upload, addAnswer);
 router.route('/getAnswer').get(allAnswer);
 router.route('/getAnswerById/:id').get(getAnswer);
-router.route('/updateAnswer/:id').put(updateAnswer, upload);
+router.route('/updateAnswer/:id').put(upload, updateAnswer);
 router.route('/deleteAnswer/:id').delete(deleteAnswer);
 
 module.exports = router;

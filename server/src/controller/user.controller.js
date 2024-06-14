@@ -107,32 +107,6 @@ async function registerUser(req, res) {
             return res.status(200).json(
                 new ApiResponse(201, userCreated, 'User is created successfully')
             );
-        // } 
-        // else {
-        //     const user = await userModel.create({
-        //         name: userData.name,
-        //         email: userData.email,
-        //         password: hashedPassword,
-        //         profilePicture: image_url,
-        //     });
-
-        //     if (!user) {
-        //         await deleteFromCloudinary(public_id);
-        //         throw new ErrorResponse(404, 'User is not created');
-        //     }
-
-        //     const userCreated = await userModel.findById(user._id).select('-password -refreshToken');
-
-        //     if (!userCreated) {
-        //         await userModel.findByIdAndDelete(user._id);
-        //         await deleteFromCloudinary(public_id);
-        //         throw new ErrorResponse(404, 'User is not created');
-        //     }
-
-        //     return res.status(200).json(
-        //         new ApiResponse(201, { userCreated }, 'User is created successfully')
-        //     );
-        // }
     } catch (err) {
         return res.status(err.statusCode || 500).json(new ApiResponse(err.statusCode || 500, {}, err.message));
     }
@@ -248,16 +222,17 @@ const refreshAccessToken = async (req, res) => {
         }
 
         const accessToken = await user.genrateAccessTkn();
+        const refreshToken = await user.genrateRefToken();
 
         return res
             .status(200)
             .cookie("accessToken", accessToken, options)
-            .cookie("refreshToken", user?.refreshToken, options)
+            .cookie("refreshToken", refreshToken, options)
             .setHeader('Authorization', `Bearer ${accessToken}`)
             .json(
                 new ApiResponse(
                     200,
-                    { accessToken, refreshToken: incomingRefreshToken },
+                    { accessToken, refreshToken },
                     "Access token refreshed"
                 )
             )

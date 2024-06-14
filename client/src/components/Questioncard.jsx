@@ -104,7 +104,7 @@ export default function Questioncard({question}) {
     console.log("this is the data line no 104 file questioncard , ", images, );
     form.append('text', text);
     form.append('codeSnippet', code);
-    form.append('file', images);
+    form.append('file', images[0]);
     await handelSubmit(form, question._id, setReturnData, setLoading);
     setLoding(false);
   }

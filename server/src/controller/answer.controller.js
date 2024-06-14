@@ -13,7 +13,7 @@ const { model } = require('mongoose');
 // Create and Save a new Question
 
 const addQuestionVaild = z.object({
-    text: z.string().nonempty(),
+    text: z.string(),
     codeSnippet: z.string(),
 });
 
@@ -21,6 +21,7 @@ const addQuestionVaild = z.object({
 const addAnswer = async (req, res) => {
     try {
         const questionDetails = req.body;
+        console.log('questionDetails', questionDetails);
         const questionDetailVaild = addQuestionVaild.parse(questionDetails);
         const questionId = req.params.id = z.string().nonempty();
         const user = await userModel.findById(req?.user?._id);
