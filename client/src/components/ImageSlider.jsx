@@ -3,15 +3,15 @@ import ImageList from '@mui/material/ImageList';
 import ImageListItem from '@mui/material/ImageListItem';
 
 export default function ImageSlider({images}) {
-    console.log("images", images);
+    if(images?.length === 0) return null;
     return (
-        <ImageList className='m-auto' sx={{ width: '65%', height: 400 }} variant="woven" cols={3} gap={8}>
-            {images?.map((item, index) => (
-                <ImageListItem key={index}>
+        <ImageList sx={{ width: 500, height: 450 }} cols={3} rowHeight={164}>
+            {images?.map((item) => (
+                <ImageListItem key={item}>
                     <img
-                        srcSet={item}
                         src={item}
-                        alt={item?.title}
+                        srcSet={item}
+                        alt="image"
                         loading="lazy"
                     />
                 </ImageListItem>
