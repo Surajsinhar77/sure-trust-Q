@@ -96,7 +96,7 @@ const userSchema = new mongoose.Schema({
 }, { timestamps: true });
 
 
-userSchema.methods.genrateRefToken = function() {
+userSchema.methods.genrateRefToken =async function() {
     const newtoken = genrateRefreshToken({_id : this._id});
     this.refreshToken = newtoken;
     return newtoken;

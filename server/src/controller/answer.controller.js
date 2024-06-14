@@ -30,7 +30,7 @@ const addAnswer = async (req, res) => {
             throw new ErrorHandling(404, 'User not found');
         }
 
-        const images = [];
+        let images = [];
 
         if (req.file) {
             const image = await uploadOnCloudinary(req.file.path);
@@ -42,7 +42,8 @@ const addAnswer = async (req, res) => {
             questionId: questionId,
             text: questionDetailVaild.text,
             codeSnippet: questionDetailVaild.codeSnippet,
-            images: images,
+            images: images,// this is the image array
+
         })
 
         await question.save();
