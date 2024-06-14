@@ -31,10 +31,9 @@ const addAnswer = async (req, res) => {
         }
 
         let images = [];
-
-        if (req.file) {
-            const image = await uploadOnCloudinary(req.file.path);
-            images.push(image);
+        for (let i = 0; i < req.files.length; i++) {
+            const { public_id, image_url } = await uploadOnCloudinary(req.file.path);
+            images.push(image_url);
         }
 
         const question = new answerModel({
