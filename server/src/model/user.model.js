@@ -97,13 +97,12 @@ const userSchema = new mongoose.Schema({
 
 
 userSchema.methods.genrateRefToken =async function() {
-    const newtoken = genrateRefreshToken({_id : this._id});
-    this.refreshToken = newtoken;
+    const newtoken = await genrateRefreshToken({_id : this._id});
     return newtoken;
 }
 
-userSchema.methods.genrateAccessTkn = function() {
-    return genrateAccessToken({
+userSchema.methods.genrateAccessTkn = async function() {
+    return await genrateAccessToken({
         _id : this._id,
         email : this.email,
         name : this.name,

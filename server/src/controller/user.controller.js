@@ -209,7 +209,7 @@ const refreshAccessToken = async (req, res) => {
         const user = await userModel.findById(decodedToken?._id);
 
         if (!user) {
-            throw new ErrorResponse(401, "Invalid refresh token");
+            throw new ErrorResponse(401, "User refresh token is Invalid");
         }
 
         if (incomingRefreshToken !== user?.refreshToken) {
@@ -221,8 +221,7 @@ const refreshAccessToken = async (req, res) => {
             secure: true
         }
 
-        const accessToken = await user.genrateAccessTkn();
-        const refreshToken = await user.genrateRefToken();
+        const { accessToken, refreshToken } = await generateAccessAndRefereshTokens(user._id);
 
         return res
             .status(200)
