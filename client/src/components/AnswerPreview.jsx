@@ -16,16 +16,16 @@ export default function AnswerPreview({answer, index}) {
     return (
         <Box>
             <Typography variant='h6' gutterBottom>
-                1 Answers
+                {index+1} Answers
             </Typography>
 
             <Box>
                 <CardContent>
                     <Typography paragraph>Method:</Typography>
                     <Typography paragraph>
-                        Heat 1/2 cup of the broth in a pot until simmering, add saffron and set
-                        aside for 10 minutes.
-                        Set aside off of the heat to let rest for 10 minutes, and then serve.
+                        {
+                            answer?.text
+                        }
                     </Typography>
                 </CardContent>
             </Box>
@@ -34,21 +34,23 @@ export default function AnswerPreview({answer, index}) {
                 <CardHeader
                     avatar={
                         <Avatar sx={{ bgcolor: red[500] }} aria-label="recipe">
-                            R
+                            {
+                                answer?.userId?.profilePicture ? <img src={answer?.userId?.profilePicture} alt="" /> : R
+                            }
                         </Avatar>
                     }
                     
-                    title="Shrimp and Chorizo Paella"
+                    title={answer?.userId?.name}
                     subheader="September 14, 2016"
                 />
             </CardContent>
             <CardContent>
-                <ImageSlider />
+                <ImageSlider images={answer?.images} />
             </CardContent>
 
 
             <CardContent>
-                <CodeUI value={value} />
+                <CodeUI value={answer?.codeSnippet} />
             </CardContent>
         </Box>
     )

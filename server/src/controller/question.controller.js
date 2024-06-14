@@ -102,13 +102,15 @@ async function getQuestion(req, res){
 
 const getQuestionById = async (req, res) =>{
     try{
-        const question = await questionModel.findById(req.params.id);
+        const questionId = z.string(24).parse(req.params.id);
+        
+        const question = await questionModel.findById(questionId).populate(['userId', 'courseId', 'batchId']);
         if(!question){
             throw new ErrorHandling(404, 'Question not found');
         }
-        return new ApiResponse(200, question, 'Question fetched successfully').send(res);
+        return res.status(200).json(new ApiResponse(200, question, 'Question fetched successfully'));
     }catch(err){
-        return new ErrorHandling(500, err.message);
+        return res.status(500).json(new ErrorHandling(500, err.message , [err], err.stack));
     }
 }
 

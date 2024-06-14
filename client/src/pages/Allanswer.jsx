@@ -7,6 +7,7 @@ import AnswerForm from '../components/AnswerForm';
 import { useEffect, useState } from "react";
 import {gettingAllAnswersOfQuestion} from '../common/AuthHandler/apiHandler';
 import { useParams } from "react-router-dom";
+import {} from '../common/AuthHandler/apiHandler';
 
 const value = `void main() {
 }
@@ -42,7 +43,11 @@ export default function Allanswer() {
         gettingAnswer(setAnswers, id)
     },[])
 
-    console.log("there is a data ", answers);
+    useEffect(()=>{
+
+    },[]);
+
+    console.log("there is a data ", );
     return (    
         <div>
             <Box className="container border m-auto bg-white text-slate-700 p-4 flex flex-col gap-16">
@@ -95,8 +100,11 @@ export default function Allanswer() {
                 {/* Answer Preview */}
                 <hr />
                 <Box>
-                    <AnswerPreview />
-                    <AnswerPreview />
+                    {
+                        answers?.map((answer, index)=>
+                            <AnswerPreview key={answer?._id} answer={answer} index={index} />
+                        )
+                    }
                 </Box>
 
                 <Box>

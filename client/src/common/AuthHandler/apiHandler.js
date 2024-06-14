@@ -238,6 +238,26 @@ export async function getQuestions() {
     }
 }
 
+export async function getQuestionById(id) {
+    try{
+        let token = await checkingTokenExpiry();
+        const response = await axios.get(`${params?.questionURL}/getQuestionById/${id}`, {
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': 'Bearer ' + token,
+            },
+            withCredentials: true,
+        });
+        if(response.status === 200){
+            return response.data.data;
+        }
+        throw new Error(response.data.message);
+    }catch(err){
+        console.log("Error in getQuestionById : ", err.message);
+        toast.error(err?.response?.data?.message || err.message, false);
+    }
+}
+
 
 export async function deleteUserById(id){
     try {
@@ -300,7 +320,7 @@ export async function gettingAllAnswersOfQuestion(id){
         });
 
         if(response.status === 200){
-            return response.data;
+            return response.data.data;
         }
         
         throw new Error(response.data.message);
