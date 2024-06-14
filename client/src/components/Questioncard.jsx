@@ -101,7 +101,6 @@ export default function Questioncard({question}) {
 
   const triggerFunction = async() => {
     setLoding(true);
-    console.log("this is the data line no 104 file questioncard , ", images, );
     form.append('text', text);
     form.append('codeSnippet', code);
     form.append('file', images[0]);

@@ -76,10 +76,14 @@ const allAnswer = async (req, res) => {
             return new ErrorHandling(400, 'Question id is required');
         }
 
-        const question = await question.find({ questionId: questionId });
-        return new ApiResponse(200, question, 'Answer fetched successfully').send(res);
+        const answers = await  answerModel.find({ questionId: questionId }).populate(['userId', 'questionId']).sort({_id: -1});
+
+        if (!answers) {
+            return new ErrorHandling(404, 'Answer not found');
+        }
+        return res.status(200).json(new ApiResponse(200, answers, 'All Answer fetched successfully'));
     } catch (err) {
-        return new ErrorHandling(500, null, err.message);
+        return res.status(500).json(new ApiResponse(500, {}, err.message));
     }
 }
 

@@ -265,14 +265,12 @@ export async function submitAnswer(answerForm, id ){
     try{
         let token = await checkingTokenExpiry();
 
-        console.log("answerForm : ", answerForm, id);
         const form = new FormData();
         form.append('text', answerForm.text);
         form.append('codeSnippet', answerForm.codeSnippet);
         form.append('file', answerForm.file);
 
-        // const response = await axios.post(`${params?.answerURL}/addAnswer/${id}`, answerForm, {
-            const response = await axios.post(`http://localhost:8000/api/v1/answer/addAnswer/${id}`, form, {
+        const response = await axios.post(`${params?.answerURL}/addAnswer/${id}`, answerForm, {
                 withCredentials: true,
                 headers: {
                 'Content-Type': 'multipart/form-data',
