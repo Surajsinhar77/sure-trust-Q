@@ -23,16 +23,16 @@ const addAnswer = async (req, res) => {
         const questionDetails = req.body;
         const questionDetailVaild = addQuestionVaild.parse(questionDetails);
         const questionId = req.params.id = z.string().nonempty();
-        const user = await userModel.findById(req.user._id);
+        const user = await userModel.findById(req?.user?._id);
 
         if (!user) {
-            return new ErrorHandling(404, null, 'User not found');
+            throw new ErrorHandling(404, 'User not found');
         }
 
         const images = [];
 
         if (req.file) {
-            const image = await uploadOnCloudinary(req.file);
+            const image = await uploadOnCloudinary(req.file.path);
             images.push(image);
         }
 
@@ -45,11 +45,12 @@ const addAnswer = async (req, res) => {
         })
 
         await question.save();
-        return new ApiResponse(200, question, 'Question added successfully').send(res);
+        return res.status(200).json(new ApiResponse(201, question, 'Question added successfully'));
     } catch (err) {
-        return new ErrorHandling(500, null, err.message);
+        return res.status(500).json(new ErrorHandling(500, err.message));
     }
 }
+
 
 const getAnswer = async (req, res) => {
     try {

@@ -13,8 +13,6 @@ export default function Model({ children, name, src, style , triggerFunction, lo
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
   
-
-  console.log( loading, "this is the value of triggerFunction and loading in Model.jsx")
   return (
     <div>
       {src ?
@@ -55,10 +53,7 @@ export default function Model({ children, name, src, style , triggerFunction, lo
             > Cancel </Button>
           </Box>
         </Box>
-
       </Modal>
-
-
     </div>
   );
 }

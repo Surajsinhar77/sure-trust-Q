@@ -101,9 +101,10 @@ export default function Questioncard({question}) {
 
   const triggerFunction = async() => {
     setLoding(true);
+    console.log("this is the data line no 104 file questioncard , ", images, );
     form.append('text', text);
     form.append('codeSnippet', code);
-    form.append('images', images);
+    form.append('file', images);
     await handelSubmit(form, question._id, setReturnData, setLoading);
     setLoding(false);
   }
@@ -132,13 +133,24 @@ export default function Questioncard({question}) {
       <CardActions disableSpacing className='gap-2'>
 
         <Box>
-          {/* ==========================================================================================> */}
+          {/* ========================================================================================> */}
 
-          <Model name={'Answer'} style={style} triggerFunction={triggerFunction} loading={loading}>
-            <AnswerForm onClose={onClose} images={images} setSelectedFile={setSelectedFile} code={code} setCode={setCode} text={text} setText={setText}  />
+          <Model 
+            name={'Answer'} 
+            style={style} 
+            triggerFunction={triggerFunction} 
+            loading={loading}>
+            <AnswerForm 
+              onClose={onClose} 
+              images={images} 
+              setSelectedFile={setSelectedFile} 
+              code={code} 
+              setCode={setCode} 
+              text={text} 
+              setText={setText} />
           </Model>
 
-          {/* =============================================================================================> */}
+          {/* =========================================================================================> */}
         </Box>
 
         <Box>
