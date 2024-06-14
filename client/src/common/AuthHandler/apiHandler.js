@@ -259,3 +259,27 @@ export async function deleteUserById(id){
         toast.error(error?.response?.data?.message || error.message, false);
     }
 }
+
+
+export async function submitAnswer(answerForm, id ){
+    try{
+        console.log("answerForm : ", answerForm, id);
+
+        let token = await checkingTokenExpiry();
+        const response = await axios.post(`${params?.answerURL}/addAnswer/${id}`, answerForm, {
+            headers: {
+                'Content-Type': 'multipart/form-data',
+                'Authorization': 'Bearer ' + token,
+            },
+            withCredentials: true,
+        });
+        console.log("this is response from the submitAnswer", response)
+        if(response.status === 200){
+            toast.success(response.data.message, true);
+            return response.data;
+        }
+        throw new Error(response.data.message);
+    }catch(err){
+        toast.error( err.message || err?.response?.data?.message, false);
+    }
+}

@@ -4,14 +4,7 @@ import { Box, Button, TextField, Paper } from '@mui/material';
 import CodeUI from '../components/CodeUI';
 import FileUploaderCard from '../components/FileUploaderCard';
 
-function AskQuestion({onClose}) {
-    const [images, setSelectedFile] = useState([]);
-    const [code, setCode] = React.useState('');
-    
-    function pleaseWrite() {
-        console.log('Please write the code')
-    }
-
+function AskQuestion({onClose, images, setSelectedFile, code, setCode, text, setText }) {
     return (
         <Box className="ask-question" varient='outlined'>
              {/* <Box className="ask-ques-container"> */}
@@ -22,11 +15,12 @@ function AskQuestion({onClose}) {
                             <h4>Solution</h4>
                             <p>Include all the information someone would need to answer your question</p>
                             <textarea
-                                name=""
+                                name="text"
                                 id="ask-ques-body"
                                 cols="32"
                                 rows="10"
                                 className='w-full'
+                                onChange={(e)=>setText(e.target.value)}
                             >
                             </textarea>
                         </label>

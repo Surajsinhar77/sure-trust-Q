@@ -27,6 +27,8 @@ const style = {
   };
 
 export default function Allanswer() {
+    const form = new FormData();
+    
     return (
         <div>
             <Box className="container border m-auto bg-white text-slate-700 p-4 flex flex-col gap-16">
@@ -85,7 +87,7 @@ export default function Allanswer() {
 
                 <Box>
                     <Model name='Answer' style={style}> 
-                        <AnswerForm />
+                        <AnswerForm form={form} />
                     </Model>
                 </Box>
             </Box>

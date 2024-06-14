@@ -3,29 +3,18 @@ import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import Typography from '@mui/material/Typography';
 import Modal from '@mui/material/Modal';
-import AnswerForm from './AnswerForm';
 import { Height } from '@mui/icons-material';
 import { Avatar } from '@mui/material';
+import LoadingButton from './Loadingbutton';
 
-// const style = {
-//   position: 'absolute',
-//   top: '60%',
-//   left: '50%',
-//   transform: 'translate(-50%, -50%)',
-//   width: 1024,
-//   Height: '90vh',
-//   bgcolor: '#f1f2f3',
-//   border: '1px solid #000',
-//   boxShadow: 24,
-//   p: 4,
-// };
-
-export default function Model({ children, name, src, style }) {
+export default function Model({ children, name, src, style , triggerFunction, loading}) {
 
   const [open, setOpen] = React.useState(false);
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
+  
 
+  console.log( loading, "this is the value of triggerFunction and loading in Model.jsx")
   return (
     <div>
       {src ?
@@ -51,10 +40,12 @@ export default function Model({ children, name, src, style }) {
                   className='font-bold text-lg'
                 > Upload </Button>
 
-                : <Button
+                : <LoadingButton
                   variant="contained"
-                  className='font-bold text-lg '
-                > Post the Answer </Button>
+                  isLoading={loading}
+                  className='font-bold text-lg'
+                  onClick={triggerFunction}
+                > Post the Answer </LoadingButton>
             }
 
             <Button

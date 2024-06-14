@@ -41,13 +41,14 @@ export default function Example(){
   };
   
   // Save button function 
-  function handleSave(e){
-  }
+  // function handleSave(e){
+  //   console.log("Form Data : before api call", formData);
+  // }
 
 
   // handle submit function
   async function handleSubmit(e) {
-    console.log("Form Data : before api call", formData);
+    console.log("Form Data : before api call  line no 51 page name askQuestion : ", formData);
     // addNewQuestion(formData, setSpaceRef, files);
     // }
   }
