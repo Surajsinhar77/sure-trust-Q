@@ -23,7 +23,7 @@ const addAnswer = async (req, res) => {
         const questionDetails = req.body;
         console.log('questionDetails', questionDetails);
         const questionDetailVaild = addQuestionVaild.parse(questionDetails);
-        const questionId = req.params.id = z.string().nonempty();
+        const questionId = z.string(24).parse(req.params.id);
         const user = await userModel.findById(req?.user?._id);
 
         if (!user) {
