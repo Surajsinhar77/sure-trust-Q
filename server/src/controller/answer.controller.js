@@ -21,7 +21,6 @@ const addQuestionVaild = z.object({
 const addAnswer = async (req, res) => {
     try {
         const questionDetails = req.body;
-        console.log('questionDetails', questionDetails);
         const questionDetailVaild = addQuestionVaild.parse(questionDetails);
         const questionId = z.string(24).parse(req.params.id);
         const user = await userModel.findById(req?.user?._id);
