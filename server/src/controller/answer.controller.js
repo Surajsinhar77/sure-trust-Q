@@ -56,12 +56,12 @@ const getAnswer = async (req, res) => {
     try {
         const questionId = req.params.id = z.string().nonempty();
         if (!questionId) {
-            return new ErrorHandling(400, null, 'Question id is required');
+            throw new ErrorHandling(400, 'Question id is required');
         }
 
         const question = await answerModel.findOne(questionId);
         if (!question) {
-            return new ErrorHandling(404, null, 'Answer not found');
+            throw new ErrorHandling(404, 'Answer not found');
         }
         return new ApiResponse(200, question, 'Answer fetched successfully').send(res);
     } catch (err) {
@@ -71,7 +71,7 @@ const getAnswer = async (req, res) => {
 
 const allAnswer = async (req, res) => {
     try {
-        const questionId = req.params.id = z.string().nonempty();
+        const questionId = z.string(24).parse(req.params.id);
         if (!questionId) {
             return new ErrorHandling(400, 'Question id is required');
         }

@@ -24,7 +24,7 @@ export default function AllRoutes() {
             <Route path="ask-question" element={<AskQuestion />} />
             <Route path="about-us" element={<AboutUs />} />
             <Route path="/my-questions" element={<MyQuestion />} />
-            <Route path="/all-answer" element={<Allanswer />} />
+            <Route path="/all-answer/:id" element={<Allanswer />} />
             <Route path='/test' element={<Test />} />
             <Route path="*" element={<Home />} />
             <Route path="/profile" element={<UserProfile />} />

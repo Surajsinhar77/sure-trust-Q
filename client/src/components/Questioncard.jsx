@@ -121,7 +121,7 @@ export default function Questioncard({question}) {
       {/* <ImgPostSection/> */}
 
       <CardContent>
-        <Link to='/all-answer' className='text-lg text-slate-700 hover:text-blue-300'>
+        <Link to={'/all-answer/'+question?._id} className='text-lg text-slate-700 hover:text-blue-300'>
           <Typography
             fontSize={17}
           >

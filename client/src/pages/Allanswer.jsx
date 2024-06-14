@@ -4,6 +4,9 @@ import ImageSlider from "../components/ImageSlider";
 import AnswerPreview from "../components/AnswerPreview";
 import Model from '../components/Model';
 import AnswerForm from '../components/AnswerForm';
+import { useEffect, useState } from "react";
+import {gettingAllAnswersOfQuestion} from '../common/AuthHandler/apiHandler';
+import { useParams } from "react-router-dom";
 
 const value = `void main() {
 }
@@ -26,10 +29,21 @@ const style = {
     p: 4,
   };
 
+const gettingAnswer = async(setAnswer, id)=>{
+    setAnswer(await gettingAllAnswersOfQuestion(id));   
+}
+
 export default function Allanswer() {
     const form = new FormData();
-    
-    return (
+    const {id} = useParams(); 
+    const [answers, setAnswers] = useState([]);
+
+    useEffect(()=>{
+        gettingAnswer(setAnswers, id)
+    },[])
+
+    console.log("there is a data ", answers);
+    return (    
         <div>
             <Box className="container border m-auto bg-white text-slate-700 p-4 flex flex-col gap-16">
                 <Box className="questionContainer">

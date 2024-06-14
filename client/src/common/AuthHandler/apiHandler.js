@@ -287,3 +287,24 @@ export async function submitAnswer(answerForm, id ){
         toast.error( err.message || err?.response?.data?.message, false);
     }
 }
+
+export async function gettingAllAnswersOfQuestion(id){
+    try{
+        const token = await checkingTokenExpiry();
+        const response = await axios.get(`${params?.answerURL}/getAnswer/${id}`, {
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': 'Bearer ' + token,
+            },
+            withCredentials: true,
+        });
+
+        if(response.status === 200){
+            return response.data;
+        }
+        
+        throw new Error(response.data.message);
+    }catch(err){
+        toast.error(err.message || err?.response?.data?.message, false);
+    }
+}
