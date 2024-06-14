@@ -16,8 +16,8 @@ const { default: mongoose } = require('mongoose');
 const generateAccessAndRefereshTokens = async (userId) => {
     try {
         const user = await userModel.findById(userId)
-        const accessToken = user.genrateAccessTkn();
-        const refreshToken = user.genrateRefToken();
+        const accessToken = await user.genrateAccessTkn();
+        const refreshToken = await user.genrateRefToken();
         // console.log('refreshToken', refreshToken)
         // console.log('accessToken', accessToken)
 
