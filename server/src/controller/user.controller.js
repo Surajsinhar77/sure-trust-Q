@@ -23,6 +23,9 @@ const generateAccessAndRefereshTokens = async (userId) => {
 
         user.refreshToken = refreshToken
         await user.save({ validateBeforeSave: false })
+        if(!refreshToken || !accessToken){
+            throw new ErrorResponse(500, "Something went wrong while generating referesh and access token")
+        }
         return { accessToken, refreshToken }
 
     } catch (error) {

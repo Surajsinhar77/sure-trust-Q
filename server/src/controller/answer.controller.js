@@ -31,10 +31,10 @@ const addAnswer = async (req, res) => {
         }
 
         let images = [];
-        for (let i = 0; i < req.files.length; i++) {
+        // for (let i = 0; i < req.file.length; i++) {
             const { public_id, image_url } = await uploadOnCloudinary(req.file.path);
             images.push(image_url);
-        }
+        // }
 
         const question = new answerModel({
             userId: req.user._id,
