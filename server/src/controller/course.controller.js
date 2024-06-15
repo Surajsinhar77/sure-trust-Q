@@ -114,7 +114,7 @@ const deleteCourseById = async (req, res) => {
         if (!course) {
             throw new ErrorHandling(404, 'Course not found');
         }
-        course.remove();
+        await course.deleteOne();
         const result = await courseModels.findByIdAndDelete(courseId);
         return res.status(200).json(new ApiResponse(200, result, 'Course deleted successfully'));
     } catch (err) {

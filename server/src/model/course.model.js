@@ -25,7 +25,7 @@ const courseSchema = new mongoose.Schema({
 }, { timestamps: true });
 
 
-courseSchema.pre('remove', async function(next) {
+courseSchema.pre('deleteOne', { document: true, query: false }, async function(next) {
     await this.model('Batch').deleteMany({ courseId: this._id });
     next();
 });
