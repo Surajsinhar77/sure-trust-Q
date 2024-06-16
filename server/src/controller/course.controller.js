@@ -80,7 +80,7 @@ const updateCourse = async (req, res) => {
     try {
         const userRole = req.user.role;
         if (userRole !== 'admin') {
-            return new ErrorHandling(403, null, 'You are not allowed to update course');
+            throw new ErrorHandling(403, 'You are not allowed to update course');
         }
 
         const courseId = z.string().parse(req.params.id);
@@ -88,17 +88,18 @@ const updateCourse = async (req, res) => {
         const courseDetailVaild = courseDetailForUpdate.parse(courseDetails);
 
         const course = await courseModels.findById(courseId);
+
+        if(course){
+            throw new ErrorHandling(404, 'Course not found');
+        }
         course.title = courseDetailVaild.title;
         course.description = courseDetailVaild.description;
         course.tags = courseDetailVaild.tags;
-        await course.save();
+        const result = await course.save();
 
-        const updatedbatch = courseModels.findByIdAndUpdate(courseId, {
-            $push: { batches: courseDetailVaild.batches }
-        }, { new: true });
-        return new ApiResponse(200, updatedbatch, 'Course updated successfully').send(res);
+        return res.status(200).json(new ApiResponse(200, result, 'Course updated successfully'));
     }catch (err) {
-        return new ErrorHandling(500, null, err.message);
+        return res.status(500).json(new ApiResponse(500, {}, err.message));
     }
 }
 
